@@ -24,6 +24,6 @@ class CajaController extends Controller
         $fechaInicio = $request['fechaInicio'];
         $fechaFin = $request['fechaFin'];
 
-        return \CajaService::movimientos($fechaInicio, $fechaFin);
+        return CajaService::movimientos($fechaInicio, $fechaFin);
     }
 }

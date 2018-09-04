@@ -26,6 +26,10 @@ class SocioController extends Controller
         return $this->service->find($id);
     }
 
+    public function update($id, Request $request)
+    {
+        $this->service->update($request->all(), $id);
+    }
 
     public function all()
     {

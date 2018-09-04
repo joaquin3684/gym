@@ -16,9 +16,31 @@ Route::get('/', function () {
 });
 
 Route::get('prueba', function() {
-    $data = ['nombre' => 'pepe', 'apellido' => 'argento', 'celular' => '15-46727473', 'domicilio' => 'tres arroyos 3684', 'dni' => 39624527, 'fecha_nacimiento' => '2017-02-04'];
-    $sus = new \App\Suscripcion(['fecha' => '2017-02-03', 'precio' => 30, 'id_socio' => 1, 'nombre' => 'focus', 'vencimiento' => '2018-02-03']);
-    $sus->save();
-    //\App\Suscripcion::create(['fecha' => '2017-02-03', 'precio' => 30, 'id_socio' => 1, 'nombre' => 'focus', 'vencimiento' => '2018-02-03']);
-   return \App\Suscripcion::all();
+
 });
+
+
+//SOCIO
+
+Route::post('socio/crear', 'SocioController@store');
+Route::post('socio/comprar', 'SocioController@comprar');
+Route::get('socio/all', 'SocioController@all');
+Route::put('socio/editar/{id}', 'SocioController@update');
+Route::get('socio/find/{id}', 'SocioController@show');
+
+
+//CAJA
+
+Route::post('caja/ingres', 'CajaController@ingreso');
+Route::post('caja/egreso', 'CajaController@egreso');
+Route::post('caja/movimientos', 'CajaController@movimientos');
+
+
+//VENDIBLES
+
+Route::get('vendibles/clases', 'VendiblesController@clases');
+Route::get('vendibles/articulos', 'VendiblesController@articulos');
+
+//VENTAS
+
+Route::post('ventas/all', 'VentaController@ventas');
