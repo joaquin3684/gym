@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSociosTable extends Migration
+class Perfiles extends Migration
 {
     /**
      * Run the migrations.
@@ -16,17 +16,10 @@ class CreateSociosTable extends Migration
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
-        Schema::create('socios', function (Blueprint $table) {
+        Schema::create('perfiles', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nombre');
-            $table->string('apellido');
-            $table->string('celular');
-            $table->string('domicilio');
-            $table->date('fecha_nacimiento');
-            $table->integer('dni');
             $table->timestamps();
-            $table->softDeletes();
-
         });
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
 
@@ -41,8 +34,7 @@ class CreateSociosTable extends Migration
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
-        Schema::dropIfExists('socios');
+        Schema::dropIfExists('perfiles');
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
-
     }
 }

@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSociosTable extends Migration
+class Usuario extends Migration
 {
     /**
      * Run the migrations.
@@ -14,20 +14,21 @@ class CreateSociosTable extends Migration
      */
     public function up()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
 
-        Schema::create('socios', function (Blueprint $table) {
+        Schema::create('usuarios', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('nombre');
-            $table->string('apellido');
-            $table->string('celular');
-            $table->string('domicilio');
-            $table->date('fecha_nacimiento');
-            $table->integer('dni');
-            $table->timestamps();
-            $table->softDeletes();
+            $table->char('name', 100)->unique();
+            $table->string('email');
+            $table->text('password');
+            $table->integer('id_perfil')->unsigned();
+            $table->foreign('id_perfil')->references('id')->on('perfiles');
+            $table->rememberToken();
 
+            $table->softDeletes();
+            $table->timestamps();
         });
+
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
 
     }
@@ -41,8 +42,7 @@ class CreateSociosTable extends Migration
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
-        Schema::dropIfExists('socios');
+        Schema::dropIfExists('usuarios');
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
-
     }
 }
