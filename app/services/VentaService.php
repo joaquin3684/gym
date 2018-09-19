@@ -11,6 +11,6 @@ class VentaService
 {
     public function ventas($fechaInicio, $fechaFin)
     {
-        return \App\Venta::with('socio', 'vendible')->whereBetween('fecha', [$fechaInicio, $fechaFin])->get();
+        return \App\Venta::with('socio', 'membresia', 'descuento')->whereBetween('fecha', [$fechaInicio, $fechaFin])->get();
     }
 }

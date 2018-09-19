@@ -3,15 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Clase extends Vendible
+class Porcentaje extends Descuento
 {
-    protected $table = 'vendibles';
-
     public function __construct(array $attributes = [])
     {
-        $attributes['tipo'] = 'suscripcion';
+        $attributes['tipo'] = 'porcentaje';
         parent::__construct($attributes);
     }
 
@@ -21,13 +18,18 @@ class Clase extends Vendible
         parent::boot();
 
         static::addGlobalScope(function ($query) {
-            $query->where('tipo', 'suscripcion');
+            $query->where('tipo', 'porcentaje');
         });
     }
 
     public function create(array $attributes = [])
     {
-        $attributes['tipo'] = 'suscripcion';
+        $attributes['tipo'] = 'porcentaje';
         parent::create($attributes);
+    }
+
+    public function aplicar($monto)
+    {
+        return $monto - $monto * $this->porcentaje / 100;
     }
 }

@@ -23,17 +23,19 @@ class SociosServiceTest extends TestCase
 
     public function testAltaSocio()
     {
-        $data = ['nombre' => 'pepe', 'apellido' => 'argento', 'celular' => '15-46727473', 'domicilio' => 'tres arroyos 3684', 'dni' => 39624527, 'fecha_nacimiento' => '2017-02-04'];
+        $data = ['nombre' => 'pepe', 'apellido' => 'argento', 'celular' => '15-46727473', 'domicilio' => 'tres arroyos 3684', 'dni' => 39624527, 'fecha_nacimiento' => '2017-02-04', 'id_descuento' => null];
+        $data2 = ['nombre' => 'pepe', 'apellido' => 'argento', 'celular' => '15-46727473', 'domicilio' => 'tres arroyos 3684', 'dni' => 39624527, 'fecha_nacimiento' => '2017-02-04', 'id_descuento' => 1];
         $this->service->crear($data);
-
+        $this->service->crear($data2);
 
         $this->assertDatabaseHas('socios', $data);
+        $this->assertDatabaseHas('socios', $data2);
     }
 
     public function testUpdateSocio()
     {
         factory(\App\Socio::class)->create();
-        $data = ['nombre' => 'pepe', 'apellido' => 'argento', 'celular' => '15-46727473', 'domicilio' => 'tres arroyos 3684', 'dni' => 39624527, 'fecha_nacimiento' => '2017-02-04'];
+        $data = ['nombre' => 'pepe', 'apellido' => 'argento', 'celular' => '15-46727473', 'domicilio' => 'tres arroyos 3684', 'dni' => 39624527, 'fecha_nacimiento' => '2017-02-04', 'id_descuento'];
         $this->service->update($data, 1);
         $this->assertDatabaseHas('socios', $data);
 

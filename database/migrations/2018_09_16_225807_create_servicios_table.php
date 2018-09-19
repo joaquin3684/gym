@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateVendiblesTable extends Migration
+class CreateServiciosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -16,13 +16,13 @@ class CreateVendiblesTable extends Migration
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
-        Schema::create('vendibles', function (Blueprint $table) {
+        Schema::create('servicios', function (Blueprint $table) {
+
             $table->increments('id');
-            $table->double('precio');
             $table->string('nombre');
-            $table->integer('vencimiento')->nullable();
-            $table->string('tipo');
+            $table->integer('creditos_minimos');
             $table->timestamps();
+            $table->softDeletes();
         });
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
 
@@ -37,7 +37,7 @@ class CreateVendiblesTable extends Migration
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
-        Schema::dropIfExists('vendibles');
+        Schema::dropIfExists('servicios');
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
 
     }

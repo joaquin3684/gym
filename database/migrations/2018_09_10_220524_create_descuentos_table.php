@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSociosTable extends Migration
+class CreateDescuentosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,21 +14,18 @@ class CreateSociosTable extends Migration
      */
     public function up()
     {
+
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
-        Schema::create('socios', function (Blueprint $table) {
+        Schema::create('descuentos', function (Blueprint $table) {
+
             $table->increments('id');
             $table->string('nombre');
-            $table->string('apellido');
-            $table->string('celular');
-            $table->string('domicilio');
-            $table->date('fecha_nacimiento');
-            $table->integer('dni');
-            $table->integer('id_descuento')->unsigned()->nullable();
-            $table->foreign('id_descuento')->references('id')->on('descuentos');
+            $table->double('porcentaje');
+            $table->integer('vencimiento_dias');
+            $table->boolean('aplicable_enconjunto');
             $table->timestamps();
             $table->softDeletes();
-
         });
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
 
@@ -43,7 +40,7 @@ class CreateSociosTable extends Migration
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
-        Schema::dropIfExists('socios');
+        Schema::dropIfExists('descuentos');
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
 
     }

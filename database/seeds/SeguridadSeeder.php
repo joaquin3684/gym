@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class SeguridadSeeder extends Seeder
@@ -12,6 +13,20 @@ class SeguridadSeeder extends Seeder
      */
     public function run()
     {
+
+        Db::transaction(function(){
+
+
+        // ALTA DE DIAAAAS
+
+            \App\Dia::create(['nombre' => 'Lunes']);
+            \App\Dia::create(['nombre' => 'Martes']);
+            \App\Dia::create(['nombre' => 'Miercoles']);
+            \App\Dia::create(['nombre' => 'Jueves']);
+            \App\Dia::create(['nombre' => 'Viernes']);
+            \App\Dia::create(['nombre' => 'Sabado']);
+            \App\Dia::create(['nombre' => 'Domingo']);
+        //
 
         $ruta = factory(App\Ruta::class)->create(['ruta' => 'vendibles/clases']);
         $ruta2 = factory(App\Ruta::class)->create(['ruta' => 'vendibles/articulos']);
@@ -34,5 +49,8 @@ class SeguridadSeeder extends Seeder
 
         $pantalla->rutas()->attach($ruta->id);
         $pantalla->rutas()->attach($ruta2->id);
+
+        });
+
     }
 }

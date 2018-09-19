@@ -7,7 +7,6 @@
  */
 
 $factory->define(App\Socio::class, function (Faker\Generator $faker) {
-    static $password;
 
     return [
         'nombre' => $faker->name,
@@ -15,7 +14,9 @@ $factory->define(App\Socio::class, function (Faker\Generator $faker) {
         'celular' => $faker->phoneNumber,
         'domicilio' => $faker->address,
         'dni' => $faker->randomNumber(8),
-        'fecha_nacimiento' => $faker->date('Y-m-d')
-
+        'fecha_nacimiento' => $faker->date('Y-m-d'),
+        'id_descuento' => function(){
+            return factory(App\Descuento::class)->create()->id;
+        }
     ];
 });

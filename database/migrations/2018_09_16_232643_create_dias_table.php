@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateVentasTable extends Migration
+class CreateDiasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -16,18 +16,9 @@ class CreateVentasTable extends Migration
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
-        Schema::create('ventas', function (Blueprint $table) {
+        Schema::create('dias', function (Blueprint $table) {
             $table->increments('id');
-            $table->date('fecha');
-            $table->double('precio');
-            $table->integer('cantidad')->nullable();
-            $table->integer('id_socio')->unsigned();
-            $table->foreign('id_socio')->references('id')->on('socios');
-            $table->integer('id_membresia')->unsigned();
-            $table->foreign('id_membresia')->references('id')->on('membresias');
-            $table->integer('id_descuento')->unsigned()->nullable();
-            $table->foreign('id_descuento')->references('id')->on('descuentos');
-
+            $table->string('nombre');
             $table->timestamps();
         });
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
@@ -43,7 +34,7 @@ class CreateVentasTable extends Migration
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
-        Schema::dropIfExists('ventas');
+        Schema::dropIfExists('dias');
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
 
     }

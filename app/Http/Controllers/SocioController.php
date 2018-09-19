@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\services\SocioService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 
 class SocioController extends Controller
@@ -39,6 +40,22 @@ class SocioController extends Controller
 
     public function comprar(Request $request)
     {
-        $this->service->comprar($request->all());
+        DB::transaction(function () use ($request){
+            $this->service->comprar($request->all());
+        });
+    }
+
+    public function acceder(Request $request)
+    {
+        DB::transaction(function () use ($request){
+            $this->service->acceder($request->all());
+        });
+    }
+
+    public function registrarEntradaAServicio(Request $request)
+    {
+        Db::transaction(function() use ($request){
+            $this->service->registrarEntrada($request->all());
+        });
     }
 }
