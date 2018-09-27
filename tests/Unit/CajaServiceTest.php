@@ -61,4 +61,5 @@ class CajaServiceTest extends TestCase
 
         $this->assertEquals(18, $movimientos->count());
     }
+
 }

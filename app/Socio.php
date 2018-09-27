@@ -26,14 +26,20 @@ class Socio extends Model
 
     public function membresias()
     {
-        return $this->belongsToMany('App\Membresia', 'socio_membresia', 'id_membresia', 'id_socio')->withPivot('vto');
+        return $this->belongsToMany('App\Membresia', 'socio_membresia', 'id_socio', 'id_membresia')->withPivot('vto');
     }
 
     public function servicios()
     {
-        return $this->belongsToMany('App\Servicio', 'socio_servicio', 'id_servicio', 'id_socio')->withPivot('creditos');
+        return $this->belongsToMany('App\Servicio', 'socio_servicio', 'id_socio', 'id_servicio')->withPivot('creditos', 'vto');
     }
 
+
+    public function cuotasPendientes()
+    {
+        return $this->hasMany('App\Cuota', 'id_socio', 'id')->where('pagada', 0);
+        return $cuotas->where('id_membresia', $membresiaId);
+    }
 
     public function acceder($automatico)
     {

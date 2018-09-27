@@ -27,30 +27,47 @@ class Membresia extends Model
 
     public function servicios()
     {
-        return $this->belongsToMany('App\Servicio', 'membresia_servicio','id_membresia', 'id_servicio')->withPivot('creditos');
+        return $this->belongsToMany('App\Servicio', 'membresia_servicio','id_membresia', 'id_servicio')->withPivot('creditos', 'vto');
     }
     
     public function socios()
     {
-        return $this->belongsToMany('App\Socio', 'socio_membresia', 'id_socio', 'id_membresia')->withPivot('vto');
+        return $this->belongsToMany('App\Socio', 'socio_membresia', 'id_membresia', 'id_socio')->withPivot('vto');
     }
 
-    public function vender($socio, $cantidad, $tipoPago, $descuento)
+    public function vender(Socio $socio, $cantidad, $tipoPago, $descuento, $observacion = null)
     {
-        $descuentos = $this->buscarDescuentos($descuento);
 
-        $precio = $this->aplicarDescuento($descuentos);
-        $this->crearCuotas($precio);
 
-        $this->socios()->attach($socio->id, ['vto' => Carbon::today()->addDays($this->vencimiento_dias)->toDateString()]);
-        $this->adjuntarServicios($socio);
-        $venta = new Venta(['fecha' => Carbon::today()->toDateString(), 'precio' => $precio, 'id_membresia' => $this->id, 'id_socio' => $socio->id, 'cantidad' => $cantidad, 'id_descuento' => $descuento->id]);
-        $venta->save();
-        CajaService::ingreso($precio, $this->nombre, null, $tipoPago);
+        $cuotas = $socio->cuotasPendientes->where('id_membresia', $this->id);
+        $precio = null;
+        if($cuotas->isNotEmpty())
+        {
+            $cuota = $cuotas->sortBy(function ($cuota){
+                return $cuota->id;
+            })->first();
+            $precio = $cuota->pago;
+            $cuota->pagada = 1;
+            $cuota->save();
+        } else {
+            $descuentos = $this->buscarDescuentos($socio, $descuento);
+
+            $precio = $this->aplicarDescuento($descuentos);
+            $this->crearCuotas($precio, $socio);
+            $vto = Carbon::today()->addDays($this->vencimiento_dias)->toDateString();
+            $this->socios()->attach($socio->id, ['vto' => $vto]);
+            $this->adjuntarServicios($socio);
+            Venta::create(['fecha' => Carbon::today()->toDateString(), 'precio' => $precio, 'id_membresia' => $this->id, 'id_socio' => $socio->id, 'cantidad' => $cantidad, 'id_descuento' => is_null($descuento) ? null : $descuento->id]);
+            $precio = $precio/ $this->nro_cuotas;
+        }
+
+        CajaService::ingreso($precio, $this->nombre, $observacion, $tipoPago);
     }
+
     public function aplicarDescuento($descuentos)
     {
         $monto = $this->precio;
+        $montoADescontar = $this->precio;
         $descuentos->each(function($descuento) use (&$monto){
             $monto = $descuento->aplicar($monto);
         });
@@ -59,9 +76,11 @@ class Membresia extends Model
 
     public function adjuntarServicios(Socio $socio)
     {
-        $ids = $this->servicios()->map(function($servicio){
-            return [$servicio->id => ['creditos' => $servicio->creditos]];
-        });
+        $ids = array();
+        foreach($this->servicios as $servicio)
+        {
+            $ids[$servicio->id] = ['creditos' => $servicio->pivot->creditos, 'vto' => Carbon::today()->addDays($servicio->pivot->vto)->toDateString()];
+        }
 
         $socio->servicios()->attach($ids);
     }
@@ -70,59 +89,73 @@ class Membresia extends Model
     {
 
         $descuentos = collect();
-        $descuentos->push($descuento);
-        $descuentos->push($socio->descuento());
-
-        $compartenDescuento = $socio->descuento()->membresias()->contains(function($membresia){ return $membresia->id == $this->id;});
-
-        if($compartenDescuento)
+        if(!is_null($descuento))
+            $descuentos->push($descuento);
+        if(!is_null($socio->descuento))
         {
-            $descuentoNoAplicableEnConjunto = $descuentos->first(function($descuento){
-                return !$descuento->esAplicableEnConjunto();
-            });
-            if($descuentoNoAplicableEnConjunto == null)
-                return $descuentos;
-            else
-                return collect($socio->descuento());
-        } else {
-            return collect($descuento);
+            $descuentos->push($socio->descuento);
+            $compartenDescuento = $socio->descuento->membresias->contains(function($membresia){ return $membresia->id == $this->id;});
+
+
+            if($compartenDescuento)
+            {
+                $descuentoNoAplicableEnConjunto = $descuentos->first(function($descuento){
+                    return !$descuento->esAplicableEnConjunto();
+                });
+                if($descuentoNoAplicableEnConjunto == null)
+                    return $descuentos;
+                else
+                    return collect()->push($socio->descuento);
+            } else {
+                return is_null($descuento) ? collect() : collect()->push($descuento);
+            }
         }
+
+        return $descuentos;
+
+
 
 
     }
 
-    public function crearCuotas($precio)
+    public function crearCuotas($precio, Socio $socio)
     {
 
             $ar = array();
             $f = Carbon::today()->addDays(30);
             $f2 = Carbon::today();
             $ultimoVencimiento = Carbon::today()->addDays($this->vencimiento_dias);
-            for($i = 0; $i <= $this->cuotas; $i++)
+            if($this->nro_cuotas == 1)
             {
-                $aux2 = $f2;
-                if($i == $this->cuotas)
-                {
-                    $aux = $ultimoVencimiento;
-                    $a = ['id_membresia' => $this->id, 'pago' => $precio/$this->cuotas, 'vto' => $aux->toDateString(), 'pagada' => false, 'fecha_inicio' => $aux2->toDateString()];
-                    array_push($ar, $a);
+                $a = ['id_membresia' => $this->id, 'id_socio' => $socio->id, 'pago' => $precio/$this->nro_cuotas, 'fecha_vto' => $f->toDateString(), 'pagada' => true, 'fecha_inicio' => $f2->toDateString(), 'nro_cuota' => 1];
+                array_push($ar, $a);
+
+            } else {
+
+                for ($i = 1; $i <= $this->nro_cuotas; $i++) {
+                    $aux2 = $f2;
+                    if ($i == $this->nro_cuotas) {
+                        $aux = $ultimoVencimiento;
+                        $a = ['id_membresia' => $this->id, 'id_socio' => $socio->id, 'pago' => $precio / $this->nro_cuotas, 'fecha_vto' => $aux->toDateString(), 'pagada' => false, 'fecha_inicio' => $aux2->toDateString(), 'nro_cuota' => $i];
+                        array_push($ar, $a);
 
 
-                }else {
-                    $aux = $f;
+                    } else {
+                        $aux = $f;
 
-                    if($i == 0)
-                        $a = ['id_membresia' => $this->id, 'pago' => $precio / $this->cuotas, 'fecha_vto' => $aux->toDateString(), 'pagada' => true, 'fecha_inicio' => $aux2->toDateString()];
-                    else
-                        $a = ['id_membresia' => $this->id, 'pago' => $precio / $this->cuotas, 'fecha_vto' => $aux->toDateString(), 'pagada' => false, 'fecha_inicio' => $aux2->toDateString()];
+                        if ($i == 1)
+                            $a = ['id_membresia' => $this->id, 'id_socio' => $socio->id, 'pago' => $precio / $this->nro_cuotas, 'fecha_vto' => $aux->toDateString(), 'pagada' => true, 'fecha_inicio' => $aux2->toDateString(), 'nro_cuota' => $i];
+                        else
+                            $a = ['id_membresia' => $this->id, 'id_socio' => $socio->id, 'pago' => $precio / $this->nro_cuotas, 'fecha_vto' => $aux->toDateString(), 'pagada' => false, 'fecha_inicio' => $aux2->toDateString(), 'nro_cuota' => $i];
 
-                    array_push($ar, $a);
+                        array_push($ar, $a);
+
+                    }
+
+                    $f->addDays(30);
+                    $f2->addDays(30);
 
                 }
-
-                $f->addDays(30);
-                $f2->addDays(30);
-                
             }
             $this->cuotas()->createMany($ar);
 

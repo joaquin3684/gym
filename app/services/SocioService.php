@@ -44,15 +44,16 @@ class SocioService
     {
         $idSocio = $elem['idSocio'];
         $tipoPago = $elem['tipoPago'];
+        $observacion = $elem['observacion'];
         $socio = Socio::with('descuento')->find($idSocio);
         foreach ($elem['membresias'] as $membresia)
         {
             $idMembresia = $membresia['id'];
             $idDescuento = $membresia['idDescuento'];
+            $cantidad = $membresia['cantidad'];
             $membresia = Membresia::find($idMembresia);
             $descuento = is_null($idDescuento) ? null : Descuento::find($idDescuento);
-            $cantidad = $membresia['cantidad'];
-            $membresia->vender($socio, $cantidad, $tipoPago, $descuento);
+            $membresia->vender($socio, $cantidad, $tipoPago, $descuento, $observacion);
         }
     }
 
@@ -95,5 +96,10 @@ class SocioService
         }])->find($elem['idSocio']);
         $servicio = $socio->servicios()->first();
         $socio->registrarEntrada($servicio);
+    }
+
+    public function socioConDatosParaVenta()
+    {
+        
     }
 }

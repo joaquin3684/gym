@@ -17,16 +17,6 @@ class SeguridadSeeder extends Seeder
         Db::transaction(function(){
 
 
-        // ALTA DE DIAAAAS
-
-            \App\Dia::create(['nombre' => 'Lunes']);
-            \App\Dia::create(['nombre' => 'Martes']);
-            \App\Dia::create(['nombre' => 'Miercoles']);
-            \App\Dia::create(['nombre' => 'Jueves']);
-            \App\Dia::create(['nombre' => 'Viernes']);
-            \App\Dia::create(['nombre' => 'Sabado']);
-            \App\Dia::create(['nombre' => 'Domingo']);
-        //
 
         $ruta = factory(App\Ruta::class)->create(['ruta' => 'vendibles/clases']);
         $ruta2 = factory(App\Ruta::class)->create(['ruta' => 'vendibles/articulos']);

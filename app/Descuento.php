@@ -13,11 +13,16 @@ class Descuento extends Model
 
     public function membresias()
     {
-        return $this->belongsToMany('App\Membresia', 'membresia_descuento', 'id_membresia', 'id_descuento');
+        return $this->belongsToMany('App\Membresia', 'membresia_descuento', 'id_descuento', 'id_membresia');
     }
 
     public function esAplicableEnConjunto()
     {
         return $this->aplicable_enconjunto;
+    }
+
+    public function aplicar(&$monto)
+    {
+        return $monto * $this->porcentaje /100;
     }
 }

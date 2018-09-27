@@ -37,6 +37,10 @@ class SocioController extends Controller
         return $this->service->all();
     }
 
+    public function findForVenta()
+    {
+        return $this->service->socioConDatosParaVenta();
+    }
 
     public function comprar(Request $request)
     {
