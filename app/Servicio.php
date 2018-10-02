@@ -13,7 +13,7 @@ class Servicio extends Model
 
     public function dias()
     {
-        return $this->belongsToMany('App\Dia', 'servicio_dia', 'id_servicio', 'id_dia')->withPivot('desde', 'hasta');
+        return $this->belongsToMany('App\Dia', 'servicio_dia', 'id_servicio', 'id_dia')->withPivot('desde', 'hasta', 'entrada_desde', 'entrada_hasta');
     }
 
 
