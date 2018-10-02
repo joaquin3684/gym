@@ -20,7 +20,7 @@ class CreateServiciosTable extends Migration
 
             $table->increments('id');
             $table->string('nombre');
-            $table->integer('creditos_minimos');
+            $table->integer('creditos_minimos')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
