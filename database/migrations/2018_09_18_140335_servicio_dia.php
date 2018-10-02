@@ -23,8 +23,8 @@ class ServicioDia extends Migration
             $table->foreign('id_dia')->references('id')->on('dias');
             $table->time('desde');
             $table->time('hasta');
-            $table->time('hora_entrada_desde')->nullable();
-            $table->time('hora_salida_desde')->nullable();
+            $table->time('entrada_desde')->nullable();
+            $table->time('entrada_hasta')->nullable();
             $table->timestamps();
         });
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');

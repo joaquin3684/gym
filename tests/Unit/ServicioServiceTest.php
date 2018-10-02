@@ -27,37 +27,37 @@ class ServicioServiceTest extends TestCase
     public function testCrearDescuento()
     {
 
-        $data = ['nombre' => 'prueba', 'creditos_minimos' => 1, 'dias' => [['id' => 1, 'desde' => '17:00:00', 'hasta' => '18:00:00'], ['id' => 2, 'desde' => '17:00:00', 'hasta' => '18:00:00']]];
+        $data = ['nombre' => 'prueba', 'creditos_minimos' => 1, 'dias' => [['id' => 1, 'desde' => '17:00:00', 'hasta' => '18:00:00', 'entrada_desde' => '16:45:00', 'entrada_hasta' => '17:15:00'], ['id' => 2, 'desde' => '17:00:00', 'hasta' => '18:00:00', 'entrada_desde' => '16:45:00', 'entrada_hasta' => '17:15:00']]];
         $this->service->crear($data);
         unset($data['dias']);
         $this->assertDatabaseHas('servicios', $data);
-        $this->assertDatabaseHas('servicio_dia', ['id_servicio' => 1, 'id_dia' => 1, 'desde' => '17:00:00', 'hasta' => '18:00:00']);
-        $this->assertDatabaseHas('servicio_dia', ['id_servicio' => 1, 'id_dia' => 2, 'desde' => '17:00:00', 'hasta' => '18:00:00']);
+        $this->assertDatabaseHas('servicio_dia', ['id_servicio' => 1, 'id_dia' => 1, 'desde' => '17:00:00', 'hasta' => '18:00:00', 'entrada_desde' => '16:45:00', 'entrada_hasta' => '17:15:00']);
+        $this->assertDatabaseHas('servicio_dia', ['id_servicio' => 1, 'id_dia' => 2, 'desde' => '17:00:00', 'hasta' => '18:00:00', 'entrada_desde' => '16:45:00', 'entrada_hasta' => '17:15:00']);
     }
 
     public function testUpdateDescuento()
     {
 
-        $data = ['id' => 1, 'nombre' => 'prueba2', 'creditos_minimos' => 2, 'dias' => [['id' => 1, 'desde' => '17:00:00', 'hasta' => '18:00:00'], ['id' => 2, 'desde' => '17:00:00', 'hasta' => '18:00:00']]];
+        $data = ['id' => 1, 'nombre' => 'prueba2', 'creditos_minimos' => 2, 'dias' => [['id' => 1, 'desde' => '17:00:00', 'hasta' => '18:00:00', 'entrada_desde' => '16:45:00', 'entrada_hasta' => '17:15:00'], ['id' => 2, 'desde' => '17:00:00', 'hasta' => '18:00:00', 'entrada_desde' => '16:45:00', 'entrada_hasta' => '17:15:00']]];
         factory(\App\Servicio::class, 3)->create()->each(function($ser){
             $ser->dias()->attach([
-                1 => ['desde' => '17:00:00', 'hasta' => '18:00:00']
+                1 => ['desde' => '17:00:00', 'hasta' => '18:00:00', 'entrada_desde' => '16:45:00', 'entrada_hasta' => '17:15:00']
             ]);
         });
 
         $this->service->update($data, $data['id']);
         unset($data['dias']);
         $this->assertDatabaseHas('servicios', $data);
-        $this->assertDatabaseHas('servicio_dia', ['id_servicio' => 1, 'id_dia' => 1, 'desde' => '17:00:00', 'hasta' => '18:00:00']);
-        $this->assertDatabaseHas('servicio_dia', ['id_servicio' => 1, 'id_dia' => 2, 'desde' => '17:00:00', 'hasta' => '18:00:00']);
+        $this->assertDatabaseHas('servicio_dia', ['id_servicio' => 1, 'id_dia' => 1, 'desde' => '17:00:00', 'hasta' => '18:00:00', 'entrada_desde' => '16:45:00', 'entrada_hasta' => '17:15:00']);
+        $this->assertDatabaseHas('servicio_dia', ['id_servicio' => 1, 'id_dia' => 2, 'desde' => '17:00:00', 'hasta' => '18:00:00', 'entrada_desde' => '16:45:00', 'entrada_hasta' => '17:15:00']);
     }
 
     public function testFindDescuento()
     {
         factory(\App\Servicio::class, 3)->create()->each(function($ser){
             $ser->dias()->attach([
-                1 => ['desde' => '17:00:00', 'hasta' => '18:00:00'],
-                2 => ['desde' => '17:00:00', 'hasta' => '18:00:00']
+                1 => ['desde' => '17:00:00', 'hasta' => '18:00:00', 'entrada_desde' => '16:45:00', 'entrada_hasta' => '17:15:00'],
+                2 => ['desde' => '17:00:00', 'hasta' => '18:00:00', 'entrada_desde' => '16:45:00', 'entrada_hasta' => '17:15:00']
             ]);
         });
 
@@ -70,8 +70,8 @@ class ServicioServiceTest extends TestCase
     {
         factory(\App\Servicio::class, 3)->create()->each(function($ser){
             $ser->dias()->attach([
-                1 => ['desde' => '17:00:00', 'hasta' => '18:00:00'],
-                2 => ['desde' => '17:00:00', 'hasta' => '18:00:00']
+                1 => ['desde' => '17:00:00', 'hasta' => '18:00:00', 'entrada_desde' => '16:45:00', 'entrada_hasta' => '17:15:00'],
+                2 => ['desde' => '17:00:00', 'hasta' => '18:00:00', 'entrada_desde' => '16:45:00', 'entrada_hasta' => '17:15:00']
             ]);
         });
 
@@ -84,8 +84,8 @@ class ServicioServiceTest extends TestCase
     {
         factory(\App\Servicio::class, 3)->create()->each(function($ser){
             $ser->dias()->attach([
-                1 => ['desde' => '17:00:00', 'hasta' => '18:00:00'],
-                2 => ['desde' => '17:00:00', 'hasta' => '18:00:00']
+                1 => ['desde' => '17:00:00', 'hasta' => '18:00:00', 'entrada_desde' => '16:45:00', 'entrada_hasta' => '17:15:00'],
+                2 => ['desde' => '17:00:00', 'hasta' => '18:00:00', 'entrada_desde' => '16:45:00', 'entrada_hasta' => '17:15:00']
             ]);
         });
         $servicios = $this->service->servicios();

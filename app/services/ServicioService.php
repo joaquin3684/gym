@@ -22,7 +22,7 @@ class ServicioService
         $ar = array();
         foreach($dias as $dia)
         {
-            $ar[$dia['id']] = ['desde' => $dia['desde'], 'hasta' => $dia['hasta']];
+            $ar[$dia['id']] = ['desde' => $dia['desde'], 'hasta' => $dia['hasta'], 'entrada_desde' => $dia['entrada_desde'], 'entrada_hasta' => $dia['entrada_hasta']];
         }
         $servicio->dias()->attach($ar);
     }
@@ -36,14 +36,17 @@ class ServicioService
         $ar = array();
         foreach($dias as $dia)
         {
-            $ar[$dia['id']] = ['desde' => $dia['desde'], 'hasta' => $dia['hasta']];
+            $ar[$dia['id']] = ['desde' => $dia['desde'], 'hasta' => $dia['hasta'], 'entrada_desde' => $dia['entrada_desde'], 'entrada_hasta' => $dia['entrada_hasta']];
         }
         $servicio->dias()->sync($ar);
     }
 
     public function delete($id)
     {
+        $servicio = Servicio::find($id);
+        $servicio->dias()->detach();
         Servicio::destroy($id);
+
     }
 
     public function find($id)

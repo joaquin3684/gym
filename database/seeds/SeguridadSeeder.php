@@ -24,8 +24,9 @@ class SeguridadSeeder extends Seeder
         $perfil = factory(App\Perfil::class)->create(['nombre' => 'admin']);
 
         $pantalla = factory(App\Pantalla::class)->create(['nombre' => 'socio']);
+        $pantalla1 = factory(App\Pantalla::class)->create(['nombre' => 'servicio']);
         $pantalla2 = factory(App\Pantalla::class)->create(['nombre' => 'caja']);
-        $pantalla3 = factory(App\Pantalla::class)->create(['nombre' => 'vendibles']);
+        $pantalla3 = factory(App\Pantalla::class)->create(['nombre' => 'descuento']);
         $pantalla4 = factory(App\Pantalla::class)->create(['nombre' => 'ventas']);
 
 
@@ -33,6 +34,7 @@ class SeguridadSeeder extends Seeder
 
        // $user->perfil()->attach($perfil->id);
         $perfil->pantallas()->attach($pantalla->id);
+        $perfil->pantallas()->attach($pantalla1->id);
         $perfil->pantallas()->attach($pantalla2->id);
         $perfil->pantallas()->attach($pantalla3->id);
         $perfil->pantallas()->attach($pantalla4->id);
