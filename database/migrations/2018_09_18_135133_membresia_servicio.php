@@ -21,7 +21,7 @@ class MembresiaServicio extends Migration
             $table->foreign('id_membresia')->references('id')->on('membresias');
             $table->integer('id_servicio')->unsigned();
             $table->foreign('id_servicio')->references('id')->on('servicios');
-            $table->integer('creditos');
+            $table->integer('creditos')->nullable();
             $table->integer('vto');
             $table->timestamps();
         });

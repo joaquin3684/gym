@@ -22,7 +22,7 @@ class MembresiaService
         $servicios = array();
         foreach($elem['servicios'] as $servicio)
         {
-            $servicios[$servicio['id']] = ['creditos' => $servicio['cantidadCreditos']];
+            $servicios[$servicio['id']] = ['creditos' => $servicio['cantidadCreditos'], 'vto' => $servicio['vto']];
         }
         $membresia->servicios()->attach($servicios);
         $membresia->descuentos()->attach($elem['descuentos']);
