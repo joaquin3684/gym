@@ -31,7 +31,7 @@ class MembresiaServiceTest extends TestCase
     public function testAltaMembresia()
     {
 
-        $data = ['precio' => 50, 'nombre' => 'combio piola', 'vencimiento_dias' => 30, 'nro_cuotas' => 2, 'servicios' => [['id' => 1, 'cantidadCreditos' => 10], ['id' => 2, 'cantidadCreditos' => 20]], 'descuentos' => [1, 2]];
+        $data = ['precio' => 50, 'nombre' => 'combio piola', 'vencimiento_dias' => 30, 'nro_cuotas' => 2, 'servicios' => [['id' => 1, 'cantidadCreditos' => 10, 'vto' => 10], ['id' => 2, 'cantidadCreditos' => 20, 'vto' => 20]], 'descuentos' => [1, 2]];
         $this->service->crear($data);
 
         unset($data['servicios']);
@@ -92,6 +92,20 @@ class MembresiaServiceTest extends TestCase
         });
 
         $membresias = $this->service->membresias();
+        $this->assertEquals($membresias->count(), 3);
+    }
+
+    public function testTraerMembresiasConTodo()
+    {
+        factory(\App\Membresia::class, 3)->create()->each(function($membresia){
+            $membresia->descuentos()->attach([1,2]);
+            $membresia->servicios()->attach([
+                1 => ['creditos' => 10],
+                2 => ['creditos' => 10]
+            ]);
+        });
+
+        $membresias = $this->service->membresiasConTodo();
         $this->assertEquals($membresias->count(), 3);
     }
 

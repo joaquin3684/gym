@@ -44,4 +44,9 @@ class MembresiaController extends Controller
         return $this->service->membresias();
     }
 
+    public function membresiasConTodo()
+    {
+        return $this->service->membresiasConTodo();
+    }
+
 }

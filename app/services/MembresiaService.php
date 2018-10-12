@@ -53,4 +53,9 @@ class MembresiaService
         Membresia::destroy($id);
     }
 
+    public function membresiasConTodo()
+    {
+        return Membresia::with('descuentos', 'servicios')->get();
+    }
+
 }

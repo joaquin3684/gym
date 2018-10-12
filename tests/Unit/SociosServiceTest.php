@@ -125,25 +125,59 @@ class SociosServiceTest extends TestCase
 
     }
 
-    public function testComprarUnaMembresiaDeUnPagoConUnSocioConDescuentoAsignadoPeroNoParaEsaMembresiaYConUnDescuentoDeMembresia()
+    public function testComprarUnaMembresiaDeUnPagoConUnSocioConDescuentoAsignadoPeroNoParaEsaMembresiaYConUnDescuentoDeMembresiaConAplicableEnConjunto()
     {
         factory(\App\Socio::class)->create(['id_descuento' => 1]);
-        $data = ['idSocio' => 1, 'tipoPago' => 'Efectivo', 'observacion' => null, 'membresias' => [['id' => 1, 'cantidad' => 1, 'idDescuento' => 3]]];
+        $data = ['idSocio' => 1, 'tipoPago' => 'Efectivo', 'observacion' => null, 'membresias' => [['id' => 2, 'cantidad' => 1, 'idDescuento' => 3]]];
 
         $this->service->comprar($data);
 
-        $this->assertDatabaseHas('movimientos', ['ingreso' => 50, 'concepto' => 'membresia 1', 'observacion' => null, 'tipo_pago' => 'Efectivo']);
-        $this->assertDatabaseHas('ventas', ['fecha' => Carbon::today()->toDateString(), 'precio' => 50, 'id_membresia' => 1, 'id_socio' => 1, 'cantidad' => 1, 'id_descuento' => 3]);
-        $this->assertDatabaseHas('socio_membresia', ['id_socio' => 1, 'id_membresia' => 1, 'vto' => Carbon::today()->addDays(30)->toDateString()]);
+        $this->assertDatabaseHas('movimientos', ['ingreso' => 37.5, 'concepto' => 'membresia 2', 'observacion' => null, 'tipo_pago' => 'Efectivo']);
+        $this->assertDatabaseHas('ventas', ['fecha' => Carbon::today()->toDateString(), 'precio' => 75, 'id_membresia' => 2, 'id_socio' => 1, 'cantidad' => 1, 'id_descuento' => 3]);
+        $this->assertDatabaseHas('socio_membresia', ['id_socio' => 1, 'id_membresia' => 2, 'vto' => Carbon::today()->addDays(90)->toDateString()]);
         $this->assertDatabaseHas('socio_servicio', ['vto' => Carbon::today()->addDays(30)->toDateString(), 'id_servicio' => 1, 'id_socio' => 1, 'creditos' => 10]);
-        $this->assertDatabaseHas('socio_servicio', ['vto' => Carbon::today()->addDays(30)->toDateString(), 'id_servicio' => 2, 'id_socio' => 1, 'creditos' => 5]);
-        $this->assertDatabaseHas('cuotas', ['id_membresia' => 1, 'id_socio' => 1, 'pagada' => 1, 'pago' => 50, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->addDays(30)->toDateString(), 'nro_cuota' => 1]);
+        $this->assertDatabaseHas('socio_servicio', ['vto' => Carbon::today()->addDays(50)->toDateString(), 'id_servicio' => 2, 'id_socio' => 1, 'creditos' => 5]);
+        $this->assertDatabaseHas('cuotas', ['id_membresia' => 2, 'id_socio' => 1, 'pagada' => 1, 'pago' => 37.5, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->addDays(30)->toDateString(), 'nro_cuota' => 1]);
+        $this->assertDatabaseHas('cuotas', ['id_membresia' => 2, 'id_socio' => 1, 'pagada' => 0, 'pago' => 37.5, 'fecha_inicio' => Carbon::today()->addDays(30)->toDateString(), 'fecha_vto' => Carbon::today()->addDays(90)->toDateString(), 'nro_cuota' => 2]);
+
+    }
+
+    public function testComprarUnaMembresiaDeUnPagoConUnSocioConDescuentoAsignadoPeroNoParaEsaMembresiaYConUnDescuentoDeMembresiaSinAplicableEnConjunto()
+    {
+        factory(\App\Socio::class)->create(['id_descuento' => 2]);
+        $data = ['idSocio' => 1, 'tipoPago' => 'Efectivo', 'observacion' => null, 'membresias' => [['id' => 2, 'cantidad' => 1, 'idDescuento' => 4]]];
+
+        $this->service->comprar($data);
+
+        $this->assertDatabaseHas('movimientos', ['ingreso' => 0, 'concepto' => 'membresia 2', 'observacion' => null, 'tipo_pago' => 'Efectivo']);
+        $this->assertDatabaseHas('ventas', ['fecha' => Carbon::today()->toDateString(), 'precio' => 0, 'id_membresia' => 2, 'id_socio' => 1, 'cantidad' => 1, 'id_descuento' => 4]);
+        $this->assertDatabaseHas('socio_membresia', ['id_socio' => 1, 'id_membresia' => 2, 'vto' => Carbon::today()->addDays(90)->toDateString()]);
+        $this->assertDatabaseHas('socio_servicio', ['vto' => Carbon::today()->addDays(30)->toDateString(), 'id_servicio' => 1, 'id_socio' => 1, 'creditos' => 10]);
+        $this->assertDatabaseHas('socio_servicio', ['vto' => Carbon::today()->addDays(50)->toDateString(), 'id_servicio' => 2, 'id_socio' => 1, 'creditos' => 5]);
+        $this->assertDatabaseHas('cuotas', ['id_membresia' => 2, 'id_socio' => 1, 'pagada' => 1, 'pago' => 0, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->addDays(30)->toDateString(), 'nro_cuota' => 1]);
+        $this->assertDatabaseHas('cuotas', ['id_membresia' => 2, 'id_socio' => 1, 'pagada' => 0, 'pago' => 0, 'fecha_inicio' => Carbon::today()->addDays(30)->toDateString(), 'fecha_vto' => Carbon::today()->addDays(90)->toDateString(), 'nro_cuota' => 2]);
 
     }
 
     public function testComprarUnaMembresiaDeUnPagoConUnSocioConDescuentoAsignadoParaEsaMembresiaYConUnDescuentoDeMembresia()
     {
-        $this->assert(false);
+        factory(\App\Socio::class)->create(['id_descuento' => 1]);
+        $data = ['idSocio' => 1, 'tipoPago' => 'Efectivo', 'observacion' => null, 'membresias' => [['id' => 1, 'cantidad' => 1, 'idDescuento' => 3], ['id' => 1, 'cantidad' => 1, 'idDescuento' => 4]]];
+
+        $this->service->comprar($data);
+
+        $this->assertDatabaseHas('movimientos', ['ingreso' => 50, 'concepto' => 'membresia 1', 'observacion' => null, 'tipo_pago' => 'Efectivo']);
+        $this->assertDatabaseHas('movimientos', ['ingreso' => 50, 'concepto' => 'membresia 1', 'observacion' => null, 'tipo_pago' => 'Efectivo']);
+        $this->assertDatabaseHas('ventas', ['fecha' => Carbon::today()->toDateString(), 'precio' => 50, 'id_membresia' => 1, 'id_socio' => 1, 'cantidad' => 1, 'id_descuento' => 3]);
+        $this->assertDatabaseHas('ventas', ['fecha' => Carbon::today()->toDateString(), 'precio' => 50, 'id_membresia' => 1, 'id_socio' => 1, 'cantidad' => 1, 'id_descuento' => 4]);
+        $this->assertDatabaseHas('socio_membresia', ['id_socio' => 1, 'id_membresia' => 1, 'vto' => Carbon::today()->addDays(30)->toDateString()]);
+        $this->assertDatabaseHas('socio_membresia', ['id_socio' => 1, 'id_membresia' => 1, 'vto' => Carbon::today()->addDays(30)->toDateString()]);
+        $this->assertDatabaseHas('socio_servicio', ['vto' => Carbon::today()->addDays(30)->toDateString(), 'id_servicio' => 1, 'id_socio' => 1, 'creditos' => 10]);
+        $this->assertDatabaseHas('socio_servicio', ['vto' => Carbon::today()->addDays(30)->toDateString(), 'id_servicio' => 1, 'id_socio' => 1, 'creditos' => 10]);
+        $this->assertDatabaseHas('socio_servicio', ['vto' => Carbon::today()->addDays(30)->toDateString(), 'id_servicio' => 2, 'id_socio' => 1, 'creditos' => 5]);
+        $this->assertDatabaseHas('socio_servicio', ['vto' => Carbon::today()->addDays(30)->toDateString(), 'id_servicio' => 2, 'id_socio' => 1, 'creditos' => 5]);
+        $this->assertDatabaseHas('cuotas', ['id_membresia' => 1, 'id_socio' => 1, 'pagada' => 1, 'pago' => 50, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->addDays(30)->toDateString(), 'nro_cuota' => 1]);
+        $this->assertDatabaseHas('cuotas', ['id_membresia' => 1, 'id_socio' => 1, 'pagada' => 1, 'pago' => 50, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->addDays(30)->toDateString(), 'nro_cuota' => 1]);
     }
 
     public function testComprarDosMembresiasDeUnPago()

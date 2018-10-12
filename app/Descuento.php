@@ -23,6 +23,8 @@ class Descuento extends Model
 
     public function aplicar(&$monto)
     {
+        $totalDescuento = $monto * $this->porcentaje / 100;
+        $montoNuevo = $monto - $totalDescuento;
         return $monto * $this->porcentaje /100;
     }
 }

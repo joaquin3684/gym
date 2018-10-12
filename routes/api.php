@@ -3,8 +3,8 @@
 use Illuminate\Http\Request;
 
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::get('prueba', function(){
+    return "asjdflaksjd";
 });
 
 Route::post('login', 'LoginController@login');
@@ -32,6 +32,7 @@ Route::group(['middleware' => ['permisos', 'jwt.auth']], function() {
 //MEMBRESIA
 
     Route::get('membresia/all', 'MembresiaController@membresias');
+    Route::get('membresia/allConTodo', 'MembresiaController@membresiasConTodo');
     Route::post('membresia/crear', 'MembresiaController@store');
     Route::put('membresia/editar/{id}', 'MembresiaController@update');
     Route::get('membresia/find/{id}', 'MembresiaController@find');

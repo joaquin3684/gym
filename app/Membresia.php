@@ -68,9 +68,22 @@ class Membresia extends Model
     {
         $monto = $this->precio;
         $montoADescontar = $this->precio;
-        $descuentos->each(function($descuento) use (&$monto){
-            $monto = $descuento->aplicar($monto);
-        });
+        $algunDescuentoEnConjunto = $descuentos->contains(function($descuento){ return $descuento->esAplicableEnConjunto(); });
+        if($algunDescuentoEnConjunto)
+        {
+            $descuentos->each(function(Descuento $descuento) use (&$monto){
+                $descuentoAplicado = $descuento->aplicar($monto);
+                $monto = $monto - $descuentoAplicado;
+            });
+        }
+        else
+        {
+            $totalDescuentos = $descuentos->sum(function($descuento) use ($monto){
+                return $descuento->aplicar($monto);
+            });
+            $monto = $monto - $totalDescuentos;
+        }
+
         return $monto;
     }
 
@@ -96,19 +109,11 @@ class Membresia extends Model
             $descuentos->push($socio->descuento);
             $compartenDescuento = $socio->descuento->membresias->contains(function($membresia){ return $membresia->id == $this->id;});
 
-
             if($compartenDescuento)
-            {
-                $descuentoNoAplicableEnConjunto = $descuentos->first(function($descuento){
-                    return !$descuento->esAplicableEnConjunto();
-                });
-                if($descuentoNoAplicableEnConjunto == null)
-                    return $descuentos;
-                else
-                    return collect()->push($socio->descuento);
-            } else {
+                return $descuentos;
+            else
                 return is_null($descuento) ? collect() : collect()->push($descuento);
-            }
+
         }
 
         return $descuentos;
