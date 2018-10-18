@@ -86,7 +86,7 @@ class SocioService
                         ->orWhere('creditos', null);
                 })
                 ->whereHas('dias', function($q) use ($dia, $hora) {
-                    $q->where('numero', $dia)
+                    $q->where('id', $dia)
                         ->where('entrada_desde', '<', $hora)
                         ->where('entrada_hasta', '>', $hora);
                 });
