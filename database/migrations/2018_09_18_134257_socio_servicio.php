@@ -22,7 +22,7 @@ class SocioServicio extends Migration
             $table->foreign('id_socio')->references('id')->on('socios');
             $table->integer('id_servicio')->unsigned();
             $table->foreign('id_servicio')->references('id')->on('servicios');
-            $table->integer('creditos');
+            $table->integer('creditos')->nullable();
             $table->date('vto');
             $table->timestamps();
         });
