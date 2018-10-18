@@ -58,4 +58,30 @@ class ServicioService
     {
         return Servicio::all();
     }
+
+    public function devolverEntradas($elem)
+    {
+        $serv = Servicio::find($elem['idServicio']);
+        foreach($elem['socios'] as $socio)
+        {
+            $socio = Socio::with(['servicios' => function($q) use ($elem){
+                $q->where('id', $elem['idServicio']);
+            }])->find($socio['idSocio']);
+            $serv->devolverEntradas($socio);
+
+        }
+    }
+
+    public function registrarEntradas($elem)
+    {
+        $serv = Servicio::find($elem['idServicio']);
+        foreach($elem['socios'] as $socio)
+        {
+            $soc = Socio::with(['servicios' => function($q) use ($elem){
+                $q->where('id', $elem['idServicio']);
+            }])->find($socio['idSocio']);
+            $serv->registrarEntrada($soc);
+
+        }
+    }
 }

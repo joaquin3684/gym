@@ -38,7 +38,6 @@ class Membresia extends Model
     public function vender(Socio $socio, $cantidad, $tipoPago, $descuento, $observacion = null)
     {
 
-
         $cuotas = $socio->cuotasPendientes->where('id_membresia', $this->id);
         $precio = null;
         if($cuotas->isNotEmpty())

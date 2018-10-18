@@ -17,22 +17,26 @@ class Servicio extends Model
     }
 
 
-
     public function registrarEntrada(Socio $socio)
     {
-        if($this->creditos != null)
-        {
-            $this->creditos--;
-            $this->save();
+        if ($this->creditos != null) {
+            $creditos = $socio->pivot->creditos--;
+            $socio->servicios()->updateExistingPivot($this->id, ['creditos' => $creditos]);
         }
 
         Accesos::create(['id_socio' => $socio->id, 'id_servicio' => $this->id]);
-
-
     }
 
-    public function suscribir($socio)
+    public function devolverEntrada(Socio $socio)
     {
-
+        if($socio->pivot->creditos != null )
+        {
+            $creditos = $socio->pivot->creditos++;
+            $socio->servicios()->updateExistingPivot($this->id, ['creditos' => $creditos]);
+        }
+        
+        Accesos::where('id_socio', $socio->id)->where('id_servicio', $this->id)->orderByDesc('created_at')->first()->delete();
     }
+
+
 }

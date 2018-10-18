@@ -15,12 +15,12 @@ Route::group(['middleware' => ['permisos', 'jwt.auth']], function() {
 //SOCIO
 
     Route::post('socio/crear', 'SocioController@store');
-    Route::post('socio/comprar', 'SocioController@comprar');
     Route::get('socio/all', 'SocioController@all');
     Route::put('socio/editar/{id}', 'SocioController@update');
     Route::get('socio/find/{id}', 'SocioController@show');
+
+    Route::post('socio/comprar', 'SocioController@comprar');
     Route::post('socio/acceder', 'SocioController@acceder');
-    Route::post('socio/registrarEntradaAServicio', 'SocioController@registrarEntradaAServicio');
 
 //CAJA
 
@@ -53,6 +53,9 @@ Route::group(['middleware' => ['permisos', 'jwt.auth']], function() {
     Route::put('servicio/editar/{id}', 'ServicioController@update');
     Route::get('servicio/find/{id}', 'ServicioController@find');
     Route::post('servicio/borrar', 'ServicioController@delete');
+
+    Route::post('servicio/registrarEntradas', 'ServicioController@registrarEntradas');
+    Route::post('servicio/devolverEntradas', 'ServicioController@devolverEntradas');
 
   // DESCUENTOS
 

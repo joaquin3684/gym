@@ -38,46 +38,43 @@ class Socio extends Model
     public function cuotasPendientes()
     {
         return $this->hasMany('App\Cuota', 'id_socio', 'id')->where('pagada', 0);
-        return $cuotas->where('id_membresia', $membresiaId);
     }
 
     public function acceder($automatico)
     {
-        if($this->servicios() == null)
+        //esto quiere decir que no tiene ningun servicio vigente
+        if($this->servicios == null)
         {
             return "no puede entrar";
         }
-        if($this->membresias()->contains(function($membresia){
-            return $membresia->cuotas() != null;
-        }) && $this->membresias()->count() == 1){
+        //esto quiere decir que tiene una membresia con la cuota vencida
+        else if($this->membresias->every(function($membresia){
+            return $membresia->cuotas != null;
+        })){
             return "no puede entrar";
         }
-        if($this->membresias()->contains(function($membresia){
-            return $membresia->cuotas() != null;
-        }) && $this->membresias()->count() > 1)
+        else
         {
-            $membresias = $this->membresias()->filter(function($membresia){
-                return $membresia->cuotas() == null;
+            $membresias = $this->membresias->filter(function($membresia){
+                return $membresia->cuotas == null;
             });
-            $servicios = $this->servicios()->filter(function($servicio) use ($membresias){
+            $servicios = $this->servicios->filter(function($servicio) use ($membresias){
                 return $membresias->contains(function($membresia) use ($servicio){
                     return $membresia->servicios->contains(function($servi) use ($servicio){
                         return $servi->id == $servicio->id;
                     });
                 });
             })->unique(function($servicio){ return $servicio->id;});
+            if($servicios->count() > 1)
+            {
+                return $servicios;
+            } else {
+                $this->servicios->first()->registrarEntrada($this);
+                return "registrada";
+            }
 
-            return $servicios;
         }
-        if($this->servicios()->count() > 1)
-        {
-            return $this->servicios();
-        }
-        if($automatico && $this->servicios()->count() == 1)
-        {
-            $this->servicios()->first()->registrarEntrada($this);
-            return "registrada";
-        }
+
 
     }
 

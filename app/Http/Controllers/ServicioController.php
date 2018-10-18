@@ -43,4 +43,18 @@ class ServicioController extends Controller
         return $this->service->servicios();
     }
 
+    public function registrarEntradas(Request $request)
+    {
+        Db::transaction(function() use ($request){
+            $this->service->registrarEntradas($request->all());
+        });
+    }
+
+    public function devolverEntradas(Request $request)
+    {
+        Db::transaction(function() use ($request){
+            $this->service->devolverEntradas($request->all());
+        });
+    }
+
 }

@@ -37,11 +37,6 @@ class SocioController extends Controller
         return $this->service->all();
     }
 
-    public function findForVenta()
-    {
-        return $this->service->socioConDatosParaVenta();
-    }
-
     public function comprar(Request $request)
     {
         DB::transaction(function () use ($request){
@@ -56,10 +51,6 @@ class SocioController extends Controller
         });
     }
 
-    public function registrarEntradaAServicio(Request $request)
-    {
-        Db::transaction(function() use ($request){
-            $this->service->registrarEntrada($request->all());
-        });
-    }
+
+
 }

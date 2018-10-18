@@ -64,10 +64,17 @@ class SocioService
         $hora = Carbon::today()->toTimeString();
 
 
-        $socio = Socio::with(['membresias' => function($query) use ($hoy, $dia, $hora){
-            $query->where('vto', '<=', $hoy)
-                ->with(['cuotas' => function($q) use ($hoy){
+        /**
+         * aca traigo el socio con las membresias que tengan cuotas vencidas con sus respectivas cuotas
+         * y con los servicios que tenga vigentes dentro del horario actual
+         */
+
+        $idSocio = $elem['idSocio'];
+        $socio = Socio::with(['membresias' => function($query) use ($hoy, $dia, $hora, $idSocio){
+            $query->where('vto', '>=', $hoy)
+                ->with(['cuotas' => function($q) use ($hoy, $idSocio){
                     $q->where('pagada', false)
+                        ->where('id_socio', $idSocio)
                     ->where('fecha_inicio', '<=', $hoy)
                         ->where('fecha_vto', '>', $hoy);
                 }])
@@ -80,26 +87,14 @@ class SocioService
                 })
                 ->whereHas('dias', function($q) use ($dia, $hora) {
                     $q->where('numero', $dia)
-                        ->where('desde', '<', $hora)
-                        ->where('hasta', '>', $hora);
+                        ->where('entrada_desde', '<', $hora)
+                        ->where('entrada_hasta', '>', $hora);
                 });
-        }])->find($elem['idSocio']);
+        }])->find($idSocio);
 
 
         return $socio->acceder($elem['automatico']);
     }
 
-    public function registrarEntradaAServicio($elem)
-    {
-        $socio = Socio::with(['servicios' => function($q) use ($elem){
-            $q->where('id', $elem['idServicio']);
-        }])->find($elem['idSocio']);
-        $servicio = $socio->servicios()->first();
-        $socio->registrarEntrada($servicio);
-    }
 
-    public function socioConDatosParaVenta()
-    {
-        
-    }
 }
