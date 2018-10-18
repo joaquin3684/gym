@@ -46,7 +46,7 @@ class SocioController extends Controller
 
     public function acceder(Request $request)
     {
-        DB::transaction(function () use ($request){
+        return DB::transaction(function () use ($request){
            return $this->service->acceder($request->all());
         });
     }

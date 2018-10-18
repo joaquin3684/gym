@@ -19,12 +19,10 @@ class SocioSeeder extends Seeder
 
             $socio1 = factory(\App\Socio::class)->create();
             $socio1->membresias()->attach([
-                1 => ['vto' => Carbon::today()->addDays(30)->toDateString()],
-                2 => ['vto' => Carbon::today()->addDays(30)->toDateString()]
+                4 => ['vto' => Carbon::today()->addDays(30)->toDateString()]
             ]);
             $socio1->servicios()->attach([
-                1 => ['creditos' => 10, 'vto' => Carbon::today()->addDays(30)->toDateString()],
-                2 => ['creditos' => 5, 'vto' => Carbon::today()->addDays(30)->toDateString()],
+                11 => ['creditos' => null, 'vto' => Carbon::today()->addDays(30)->toDateString()]
             ]);
 
             $socio2 = factory(\App\Socio::class)->create();

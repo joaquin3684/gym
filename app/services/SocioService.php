@@ -61,7 +61,7 @@ class SocioService
     {
         $hoy = Carbon::today()->toDateString();
         $dia = Carbon::today()->dayOfWeekIso;
-        $hora = Carbon::today()->toTimeString();
+        $hora = Carbon::now('America/Argentina/Buenos_Aires')->toTimeString();
 
 
         /**
@@ -80,15 +80,15 @@ class SocioService
                 }])
             ->with('servicios');
         }, 'servicios' => function($query) use ($hoy, $dia, $hora){
-            $query->where('vto', '<=', $hoy)
+            $query->where('vto', '>=', $hoy)
                 ->where(function($q){
                     $q->where('creditos', '>', 0)
                         ->orWhere('creditos', null);
                 })
                 ->whereHas('dias', function($q) use ($dia, $hora) {
                     $q->where('id', $dia)
-                        ->where('entrada_desde', '<', $hora)
-                        ->where('entrada_hasta', '>', $hora);
+                        ->where('entrada_desde', '<=', $hora)
+                        ->where('entrada_hasta', '>=', $hora);
                 });
         }])->find($idSocio);
 

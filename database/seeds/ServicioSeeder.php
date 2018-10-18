@@ -16,11 +16,27 @@ class ServicioSeeder extends Seeder
 
             factory(\App\Servicio::class, 10)->create()->each(function($servicio, $key){
                 $servicio->dias()->attach([
-                    1 => ['desde' => '17:00:00', 'hasta' => '20:00:00'],
-                    2 => ['desde' => '17:00:00', 'hasta' => '20:00:00'],
-                    5 => ['desde' => '17:00:00', 'hasta' => '20:00:00'],
+                    1 => ['desde' => '7:00:00', 'hasta' => '22:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '22:00:00'],
+                    2 => ['desde' => '7:00:00', 'hasta' => '22:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '22:00:00'],
+                    3 => ['desde' => '7:00:00', 'hasta' => '22:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '22:00:00'],
+                    4 => ['desde' => '7:00:00', 'hasta' => '22:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '22:00:00'],
+                    5 => ['desde' => '7:00:00', 'hasta' => '22:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '22:00:00'],
+                    6 => ['desde' => '7:00:00', 'hasta' => '22:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '22:00:00'],
+                    7 => ['desde' => '17:00:00', 'hasta' => '20:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '22:00:00'],
                 ]);
             });
+
+            $servicio = factory(\App\Servicio::class)->create(['nombre' => 'Entrada gym'])->dias()->attach([
+                1 => ['desde' => '7:00:00', 'hasta' => '22:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '22:00:00'],
+                2 => ['desde' => '7:00:00', 'hasta' => '22:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '22:00:00'],
+                3 => ['desde' => '7:00:00', 'hasta' => '22:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '22:00:00'],
+                4 => ['desde' => '7:00:00', 'hasta' => '22:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '22:00:00'],
+                5 => ['desde' => '7:00:00', 'hasta' => '22:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '22:00:00'],
+                6 => ['desde' => '7:00:00', 'hasta' => '22:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '22:00:00'],
+                7 => ['desde' => '7:00:00', 'hasta' => '22:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '22:00:00'],
+
+            ]);
         });
+
     }
 }

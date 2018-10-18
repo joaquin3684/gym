@@ -18,6 +18,7 @@ class InicioSistema extends Seeder
             $this->call(DescuentoSeeder::class);
             $this->call(ServicioSeeder::class);
             $this->call(MembresiaSeeder::class);
+            $this->call(SocioSeeder::class);
         });
     }
 }

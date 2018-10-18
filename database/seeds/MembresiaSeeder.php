@@ -38,7 +38,16 @@ class MembresiaSeeder extends Seeder
                 2 => ['creditos' => 5, 'vto' => 50]
             ]);
             $membresia->descuentos()->attach([1,2, 3, 4]);
+
+            $membresiaEntradaGym = factory(\App\Membresia::class)->create(['nro_cuotas' => 1, 'vencimiento_dias' => 30, 'precio' => 100, 'nombre' => 'gimnasio']);
+            $membresiaEntradaGym->servicios()->attach([
+                11 => ['creditos' => null, 'vto' => 30]
+            ]);
+            $membresiaEntradaGym->descuentos()->attach([3, 4]);
         });
+
+
+
 
     }
 }

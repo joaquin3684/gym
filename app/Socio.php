@@ -49,14 +49,14 @@ class Socio extends Model
         }
         //esto quiere decir que tiene una membresia con la cuota vencida
         else if($this->membresias->every(function($membresia){
-            return $membresia->cuotas != null;
+            return $membresia->cuotas->isNotEmpty();
         })){
             return "no puede entrar";
         }
         else
         {
             $membresias = $this->membresias->filter(function($membresia){
-                return $membresia->cuotas == null;
+                return $membresia->cuotas->isEmpty();
             });
             $servicios = $this->servicios->filter(function($servicio) use ($membresias){
                 return $membresias->contains(function($membresia) use ($servicio){
@@ -67,7 +67,7 @@ class Socio extends Model
             })->unique(function($servicio){ return $servicio->id;});
             if($servicios->count() > 1)
             {
-                return $servicios;
+                 return ['id' => $this->id, 'nombre' => $this->nombre, 'apellido' => $this->apellido, 'servicios' => $servicios->toArray()];
             } else {
                 $this->servicios->first()->registrarEntrada($this);
                 return "registrada";
@@ -76,11 +76,6 @@ class Socio extends Model
         }
 
 
-    }
-
-    public function registrarEntrada(Servicio $servicio)
-    {
-        $servicio->registrarEntrada($this);
     }
 
 

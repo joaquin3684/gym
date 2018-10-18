@@ -13,14 +13,14 @@ Route::post('login', 'LoginController@login');
 Route::group(['middleware' => ['permisos', 'jwt.auth']], function() {
 
 //SOCIO
+    Route::post('socio/acceder', 'SocioController@acceder');
+    Route::post('socio/comprar', 'SocioController@comprar');
 
     Route::post('socio/crear', 'SocioController@store');
     Route::get('socio/all', 'SocioController@all');
     Route::put('socio/editar/{id}', 'SocioController@update');
     Route::get('socio/find/{id}', 'SocioController@show');
 
-    Route::post('socio/comprar', 'SocioController@comprar');
-    Route::post('socio/acceder', 'SocioController@acceder');
 
 //CAJA
 

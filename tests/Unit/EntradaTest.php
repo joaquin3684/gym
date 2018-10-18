@@ -25,7 +25,9 @@ class EntradaTest extends TestCase
 
     public function testAccederAUnaHoraDondeSoloHayaUnServicioDisponible()
     {
-
+        $data = ['idSocio' => 2, 'automatico' => true];
+        $valor = $this->service->acceder($data);
+        assert(true);
     }
 
     public function testAccederAUnaHoraDondeHayaMasDeUnServicioDisponible()
