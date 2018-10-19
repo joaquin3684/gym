@@ -12,7 +12,7 @@ class Socio extends Model
 {
     use SoftDeletes;
     protected $table = 'socios';
-    protected $fillable = ['nombre', 'apellido', 'celular', 'domicilio', 'dni', 'fecha_nacimiento', 'id_descuento'];
+    protected $fillable = ['nombre', 'apellido', 'celular', 'domicilio', 'dni', 'fecha_nacimiento', 'id_descuento', 'genero', 'email'];
     protected $dates = ['deleted_at'];
 
     public function descuento()
@@ -43,7 +43,7 @@ class Socio extends Model
 
     public function accesos()
     {
-        return $this->belongsToMany('App\Accesos', 'accesos', 'id_socio', 'id_servicio');
+        return $this->hasMany('App\Accesos','id_socio', 'id');
     }
     
     public function acceder($automatico)

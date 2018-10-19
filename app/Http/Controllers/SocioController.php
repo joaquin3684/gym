@@ -51,7 +51,10 @@ class SocioController extends Controller
         });
     }
 
-
+    public function accesos($idSocio)
+    {
+        return $this->service->accesos($idSocio);
+    }
 
 
 }

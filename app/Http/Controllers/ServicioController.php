@@ -57,4 +57,8 @@ class ServicioController extends Controller
         });
     }
 
+    public function accesos($idSocio)
+    {
+        return $this->service->accesos($idSocio);
+    }
 }

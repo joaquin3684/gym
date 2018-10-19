@@ -1,6 +1,7 @@
 <?php
 namespace App\services;
 
+use App\Accesos;
 use App\Descuento;
 use App\Membresia;
 use App\Socio;
@@ -95,8 +96,12 @@ class SocioService
 
         return $socio->acceder($elem['automatico']);
     }
-    
 
+
+    public function accesos($idSocio)
+    {
+        return Accesos::with('servicio')->where('id_socio', $idSocio)->orderBy('created_at', 'desc')->limit(10)->get();
+    }
 
 
 }

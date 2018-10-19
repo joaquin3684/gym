@@ -9,6 +9,7 @@
 namespace App\services;
 
 
+use App\Accesos;
 use App\Servicio;
 use App\Socio;
 
@@ -80,6 +81,7 @@ class ServicioService
             $serv->registrarEntrada($soc);
         }
     }
+
 
 
 }
