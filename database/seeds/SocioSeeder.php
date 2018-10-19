@@ -22,7 +22,7 @@ class SocioSeeder extends Seeder
                 4 => ['vto' => Carbon::today()->addDays(30)->toDateString()]
             ]);
             $socio1->servicios()->attach([
-                11 => ['creditos' => null, 'vto' => Carbon::today()->addDays(30)->toDateString()]
+                11 => ['creditos' => 100, 'vto' => Carbon::today()->addDays(30)->toDateString()]
             ]);
 
             $socio2 = factory(\App\Socio::class)->create();
@@ -35,8 +35,64 @@ class SocioSeeder extends Seeder
                 2 => ['creditos' => 5, 'vto' => Carbon::today()->addDays(30)->toDateString()],
             ]);
 
-            $cuota = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => true, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->toDateString(), 'id_socio' => $socio1->id, 'id_membresia' => 1]);
+            $socio3 = factory(\App\Socio::class)->create();
+            $socio3->membresias()->attach([
+                5 => ['vto' => Carbon::today()->addDays(30)->toDateString()]
+            ]);
+            $socio3->servicios()->attach([
+                12 => ['creditos' => null, 'vto' => Carbon::today()->addDays(30)->toDateString()]
+            ]);
+
+            $socio4 = factory(\App\Socio::class)->create();
+            $socio4->membresias()->attach([
+                4 => ['vto' => Carbon::today()->addDays(30)->toDateString()]
+            ]);
+            $socio4->servicios()->attach([
+                11 => ['creditos' => 0, 'vto' => Carbon::today()->addDays(30)->toDateString()]
+            ]);
+
+            $socio5 = factory(\App\Socio::class)->create();
+            $socio5->membresias()->attach([
+                4 => ['vto' => Carbon::today()->addDays(30)->toDateString()]
+            ]);
+            $socio5->servicios()->attach([
+                11 => ['creditos' => 100, 'vto' => Carbon::today()->subDay()->toDateString()]
+            ]);
+
+            $socio6 = factory(\App\Socio::class)->create();
+            $socio6->membresias()->attach([
+                4 => ['vto' => Carbon::today()->addDays(30)->toDateString()]
+            ]);
+            $socio6->servicios()->attach([
+                11 => ['creditos' => 100, 'vto' => Carbon::today()->subDay()->toDateString()]
+            ]);
+
+            $socio7 = factory(\App\Socio::class)->create();
+            $socio7->membresias()->attach([
+                4 => ['vto' => Carbon::today()->addDays(30)->toDateString()]
+            ]);
+            $socio7->servicios()->attach([
+                11 => ['creditos' => 100, 'vto' => Carbon::today()->addDays(30)->toDateString()]
+            ]);
+
+            $socio8 = factory(\App\Socio::class)->create();
+            $socio8->membresias()->attach([
+                1 => ['vto' => Carbon::today()->addDays(30)->toDateString()]
+            ]);
+            $socio8->servicios()->attach([
+                1 => ['creditos' => 10, 'vto' => Carbon::today()->subDay()->toDateString()],
+                2 => ['creditos' => 5, 'vto' => Carbon::today()->addDays(30)->toDateString()],
+            ]);
+
+
+            $cuota = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => true, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->toDateString(), 'id_socio' => $socio1->id, 'id_membresia' => 4]);
             $cuota2 = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => true, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->toDateString(), 'id_socio' => $socio2->id, 'id_membresia' => 1]);
+            $cuota3 = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => true, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->toDateString(), 'id_socio' => $socio3->id, 'id_membresia' => 5]);
+            $cuota4 = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => true, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->toDateString(), 'id_socio' => $socio4->id, 'id_membresia' => 4]);
+            $cuota5 = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => true, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->toDateString(), 'id_socio' => $socio5->id, 'id_membresia' => 4]);
+            $cuota6 = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => true, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->toDateString(), 'id_socio' => $socio6->id, 'id_membresia' => 4]);
+            $cuota7 = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => false, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->addDays(30)->toDateString(), 'id_socio' => $socio7->id, 'id_membresia' => 4]);
+            $cuota8 = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => true, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->addDays(30)->toDateString(), 'id_socio' => $socio8->id, 'id_membresia' => 1]);
 
 
 

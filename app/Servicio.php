@@ -19,8 +19,8 @@ class Servicio extends Model
 
     public function registrarEntrada(Socio $socio)
     {
-        if ($this->creditos != null) {
-            $creditos = $socio->pivot->creditos--;
+        if ($this->pivot->creditos != null) {
+            $creditos = --$this->pivot->creditos;
             $socio->servicios()->updateExistingPivot($this->id, ['creditos' => $creditos]);
         }
 

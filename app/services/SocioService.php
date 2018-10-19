@@ -95,6 +95,12 @@ class SocioService
 
         return $socio->acceder($elem['automatico']);
     }
+    
+    public function historialCompra($idSocio)
+    {
+        return Socio::with('ventas.membresia', 'ventas.descuento')->find($idSocio);
+    }
+
 
 
 }

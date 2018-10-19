@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Enums\RegistroEntrada;
 use App\services\CajaService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -40,18 +41,23 @@ class Socio extends Model
         return $this->hasMany('App\Cuota', 'id_socio', 'id')->where('pagada', 0);
     }
 
+    public function accesos()
+    {
+        return $this->belongsToMany('App\Accesos', 'accesos', 'id_socio', 'id_servicio');
+    }
+    
     public function acceder($automatico)
     {
         //esto quiere decir que no tiene ningun servicio vigente
-        if($this->servicios == null)
+        if($this->servicios->isEmpty())
         {
-            return "no puede entrar";
+            return RegistroEntrada::ENTRADA_RECHAZADA;
         }
         //esto quiere decir que tiene una membresia con la cuota vencida
         else if($this->membresias->every(function($membresia){
             return $membresia->cuotas->isNotEmpty();
         })){
-            return "no puede entrar";
+            return RegistroEntrada::ENTRADA_RECHAZADA;
         }
         else
         {
@@ -70,7 +76,7 @@ class Socio extends Model
                  return ['id' => $this->id, 'nombre' => $this->nombre, 'apellido' => $this->apellido, 'servicios' => $servicios->toArray()];
             } else {
                 $this->servicios->first()->registrarEntrada($this);
-                return "registrada";
+                return RegistroEntrada::ENTRADA_REGISTRADA;
             }
 
         }

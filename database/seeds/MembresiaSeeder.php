@@ -44,6 +44,16 @@ class MembresiaSeeder extends Seeder
                 11 => ['creditos' => null, 'vto' => 30]
             ]);
             $membresiaEntradaGym->descuentos()->attach([3, 4]);
+
+            $membresiaConServicioNuncaDisponible = factory(\App\Membresia::class)->create(['nro_cuotas' => 1, 'vencimiento_dias' => 30, 'precio' => 100, 'nombre' => 'membresia con servicio nunca disponible']);
+            $membresiaConServicioNuncaDisponible->servicios()->attach([
+                11 => ['creditos' => null, 'vto' => 30]
+            ]);
+            $membresiaConServicioNuncaDisponible->descuentos()->attach([3, 4]);
+
+
+
+
         });
 
 

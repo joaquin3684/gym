@@ -61,27 +61,34 @@ class ServicioService
 
     public function devolverEntradas($elem)
     {
-        $serv = Servicio::find($elem['idServicio']);
-        foreach($elem['socios'] as $socio)
+        foreach($elem['servicios'] as $servicio)
         {
-            $socio = Socio::with(['servicios' => function($q) use ($elem){
-                $q->where('id', $elem['idServicio']);
-            }])->find($socio['idSocio']);
-            $serv->devolverEntradas($socio);
+            $serv = Servicio::find($servicio);
 
+            foreach($elem['socios'] as $socio)
+            {
+                $soc = Socio::with(['servicios' => function($q) use ($servicio){
+                    $q->where('id', $servicio);
+                }])->find($socio);
+                $serv->devolverEntrada($soc);
+            }
         }
     }
 
     public function registrarEntradas($elem)
     {
-        $serv = Servicio::find($elem['idServicio']);
-        foreach($elem['socios'] as $socio)
+        foreach($elem['servicios'] as $servicio)
         {
-            $soc = Socio::with(['servicios' => function($q) use ($elem){
-                $q->where('id', $elem['idServicio']);
-            }])->find($socio['idSocio']);
-            $serv->registrarEntrada($soc);
+            $serv = Servicio::find($servicio);
 
+            foreach($elem['socios'] as $socio)
+            {
+                $soc = Socio::with(['servicios' => function($q) use ($servicio){
+                    $q->where('id', $servicio);
+                }])->find($socio);
+                $serv->registrarEntrada($soc);
+            }
         }
+
     }
 }

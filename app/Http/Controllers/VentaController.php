@@ -20,7 +20,8 @@ class VentaController extends Controller
     {
         $fechaInicio = $request['fechaInicio'];
         $fechaFin = $request['fechaFin'];
-
         return $this->service->ventas($fechaInicio, $fechaFin);
     }
+
+
 }

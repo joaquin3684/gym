@@ -20,7 +20,7 @@ Route::group(['middleware' => ['permisos', 'jwt.auth']], function() {
     Route::get('socio/all', 'SocioController@all');
     Route::put('socio/editar/{id}', 'SocioController@update');
     Route::get('socio/find/{id}', 'SocioController@show');
-
+    Route::get('socio/historialCompra/{id}', 'SocioController@historialCompra');
 
 //CAJA
 

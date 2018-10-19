@@ -36,6 +36,8 @@ class ServicioSeeder extends Seeder
                 7 => ['desde' => '7:00:00', 'hasta' => '22:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '22:00:00'],
 
             ]);
+
+            $servicioNuncaDisponible = factory(\App\Servicio::class)->create(['nombre' => 'Servicio nunca disponible']);
         });
 
     }
