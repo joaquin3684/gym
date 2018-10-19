@@ -20,8 +20,7 @@ class ServicioService
         $servicio->save();
         $dias = $elem['dias'];
         $ar = array();
-        foreach($dias as $dia)
-        {
+        foreach ($dias as $dia) {
             $ar[$dia['id']] = ['desde' => $dia['desde'], 'hasta' => $dia['hasta'], 'entrada_desde' => $dia['entrada_desde'], 'entrada_hasta' => $dia['entrada_hasta']];
         }
         $servicio->dias()->attach($ar);
@@ -34,8 +33,7 @@ class ServicioService
         $servicio->save();
         $dias = $elem['dias'];
         $ar = array();
-        foreach($dias as $dia)
-        {
+        foreach ($dias as $dia) {
             $ar[$dia['id']] = ['desde' => $dia['desde'], 'hasta' => $dia['hasta'], 'entrada_desde' => $dia['entrada_desde'], 'entrada_hasta' => $dia['entrada_hasta']];
         }
         $servicio->dias()->sync($ar);
@@ -61,35 +59,27 @@ class ServicioService
 
     public function devolverEntradas($elem)
     {
-        foreach($elem['servicios'] as $servicio)
-        {
-            $serv = Servicio::find($servicio);
-
-            foreach($elem['socios'] as $socio)
-            {
-                $soc = Socio::with(['servicios' => function($q) use ($servicio){
-                    $q->where('id_servicio', $servicio);
-                }])->find($socio);
-                $serv->devolverEntrada($soc);
-            }
+        $servicios = $elem['servicios'];
+        foreach ($elem['socios'] as $socio) {
+            $soc = Socio::with(['servicios' => function ($q) use ($servicios) {
+                $q->whereIn('id_servicio', $servicios);
+            }])->find($socio);
+            $serv = $soc->servicios->first();
+            $serv->devolverEntrada($soc);
         }
     }
 
     public function registrarEntradas($elem)
     {
-        foreach($elem['servicios'] as $servicio)
-        {
-            $serv = Servicio::find($servicio);
-
-            foreach($elem['socios'] as $socio)
-            {
-                $soc = Socio::with(['servicios' => function($q) use ($servicio){
-                    $q->where('id_servicio', $servicio);
-                }])->find($socio);
-                $servicio
-                $serv->registrarEntrada($soc);
-            }
+        $servicios = $elem['servicios'];
+        foreach ($elem['socios'] as $socio) {
+            $soc = Socio::with(['servicios' => function ($q) use ($servicios) {
+                $q->whereIn('id_servicio', $servicios);
+            }])->find($socio);
+            $serv = $soc->servicios->first();
+            $serv->registrarEntrada($soc);
         }
-
     }
+
+
 }
