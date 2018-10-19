@@ -68,7 +68,7 @@ class ServicioService
             foreach($elem['socios'] as $socio)
             {
                 $soc = Socio::with(['servicios' => function($q) use ($servicio){
-                    $q->where('id', $servicio);
+                    $q->where('id_servicio', $servicio);
                 }])->find($socio);
                 $serv->devolverEntrada($soc);
             }
@@ -84,7 +84,7 @@ class ServicioService
             foreach($elem['socios'] as $socio)
             {
                 $soc = Socio::with(['servicios' => function($q) use ($servicio){
-                    $q->where('id', $servicio);
+                    $q->where('id_servicio', $servicio);
                 }])->find($socio);
                 $serv->registrarEntrada($soc);
             }
