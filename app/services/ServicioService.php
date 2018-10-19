@@ -86,6 +86,7 @@ class ServicioService
                 $soc = Socio::with(['servicios' => function($q) use ($servicio){
                     $q->where('id_servicio', $servicio);
                 }])->find($socio);
+                $servicio
                 $serv->registrarEntrada($soc);
             }
         }

@@ -23,5 +23,10 @@ class VentaController extends Controller
         return $this->service->ventas($fechaInicio, $fechaFin);
     }
 
+    public function historialCompra($idSocio)
+    {
+        return $this->service->historialCompra($idSocio);
+    }
+
 
 }

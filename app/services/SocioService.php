@@ -98,6 +98,7 @@ class SocioService
     
     public function historialCompra($idSocio)
     {
+
         return Socio::with('ventas.membresia', 'ventas.descuento')->find($idSocio);
     }
 

@@ -51,10 +51,7 @@ class SocioController extends Controller
         });
     }
 
-    public function historialCompra($idSocio)
-    {
-        return $this->service->historialCompra($idSocio);
-    }
+
 
 
 }

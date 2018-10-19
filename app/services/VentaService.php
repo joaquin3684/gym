@@ -7,10 +7,17 @@
  */
 namespace App\services;
 
+use App\Venta;
+
 class VentaService
 {
     public function ventas($fechaInicio, $fechaFin)
     {
-        return \App\Venta::with('socio', 'membresia', 'descuento')->whereBetween('fecha', [$fechaInicio, $fechaFin])->get();
+        return Venta::with('socio', 'membresia', 'descuento')->whereBetween('fecha', [$fechaInicio, $fechaFin])->get();
+    }
+
+    public function historialCompra($idSocio)
+    {
+        return Venta::with('socio', 'membresia', 'descuento')->where('id_socio', $idSocio)->get();
     }
 }

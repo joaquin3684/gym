@@ -13,6 +13,7 @@ class EntradaTest extends TestCase
     use DatabaseMigrations;
 
     private $service;
+    private $servService;
     public function setUp()
     {
         parent::setUp();
@@ -81,5 +82,14 @@ class EntradaTest extends TestCase
         $data = ['idSocio' => 7, 'automatico' => true];
         $valor = $this->service->acceder($data);
         $this->assertEquals($valor, 2);
+    }
+
+    public function testRegistrarEntradaManual()
+    {
+        $data = ['socios' => [1], 'servicios' => [11]];
+        $this->servService->registrarEntradas($data);
+        $this->assertDatabaseHas('accesos', ['id_socio' => 1, 'id_servicio' => 11]);
+        $this->assertDatabaseHas('socio_servicio', ['id_socio' => 1, 'id_servicio' => 11, 'creditos' => 99]);
+
     }
 }
