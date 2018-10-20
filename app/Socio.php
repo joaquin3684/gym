@@ -61,6 +61,7 @@ class Socio extends Model
         }
         else
         {
+            $i = 0;
             $membresias = $this->membresias->filter(function($membresia){
                 return $membresia->cuotas->isEmpty();
             });
@@ -73,7 +74,7 @@ class Socio extends Model
             })->unique(function($servicio){ return $servicio->id;});
             if($servicios->count() > 1)
             {
-                 return ['id' => $this->id, 'nombre' => $this->nombre, 'apellido' => $this->apellido, 'servicios' => $servicios->toArray()];
+                 return ['id' => $this->id, 'nombre' => $this->nombre, 'apellido' => $this->apellido, 'servicios' => $servicios->values()->all()];
             } else {
                 $this->servicios->first()->registrarEntrada($this);
                 return RegistroEntrada::ENTRADA_REGISTRADA;
