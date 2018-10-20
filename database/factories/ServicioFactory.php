@@ -10,5 +10,6 @@ $factory->define(App\Servicio::class, function (Faker\Generator $faker) {
     return [
         'nombre' => '50%',
         'creditos_minimos' => 1,
+        'registra_entrada' => 1
     ];
 });

@@ -9,7 +9,7 @@ class Servicio extends Model
 {
     use SoftDeletes;
     protected $table = 'servicios';
-    protected $fillable = ['nombre', 'creditos_minimos'];
+    protected $fillable = ['nombre', 'creditos_minimos', 'registra_entrada'];
 
     public function dias()
     {

@@ -21,6 +21,7 @@ class CreateDescuentosTable extends Migration
 
             $table->increments('id');
             $table->string('nombre');
+            $table->integer('tipo');
             $table->double('porcentaje');
             $table->integer('vencimiento_dias');
             $table->boolean('aplicable_enconjunto');

@@ -11,6 +11,7 @@ $factory->define(App\Descuento::class, function (Faker\Generator $faker) {
         'nombre' => '50%',
         'porcentaje' => 50,
         'vencimiento_dias' => 30,
-        'aplicable_enconjunto' => false
+        'aplicable_enconjunto' => false,
+        'tipo' => 1
     ];
 });

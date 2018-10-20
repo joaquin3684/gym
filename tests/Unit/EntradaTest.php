@@ -92,4 +92,11 @@ class EntradaTest extends TestCase
         $this->assertDatabaseHas('socio_servicio', ['id_socio' => 1, 'id_servicio' => 11, 'creditos' => 99]);
 
     }
+
+    public function testServicioQueNoRegistraEntrada()
+    {
+        $data = ['idSocio' => 9, 'automatico' => true];
+        $valor = $this->service->acceder($data);
+        $this->assertEquals($valor, 2);
+    }
 }

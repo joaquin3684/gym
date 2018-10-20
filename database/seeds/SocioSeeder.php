@@ -84,6 +84,14 @@ class SocioSeeder extends Seeder
                 2 => ['creditos' => 5, 'vto' => Carbon::today()->addDays(30)->toDateString()],
             ]);
 
+            $socio9 = factory(\App\Socio::class)->create();
+            $socio9->membresias()->attach([
+                6 => ['vto' => Carbon::today()->addDays(30)->toDateString()]
+            ]);
+            $socio9->servicios()->attach([
+                13 => ['creditos' => 10, 'vto' => Carbon::today()->addDays(30)->toDateString()],
+            ]);
+
 
             $cuota = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => true, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->toDateString(), 'id_socio' => $socio1->id, 'id_membresia' => 4]);
             $cuota2 = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => true, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->toDateString(), 'id_socio' => $socio2->id, 'id_membresia' => 1]);
@@ -93,6 +101,7 @@ class SocioSeeder extends Seeder
             $cuota6 = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => true, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->toDateString(), 'id_socio' => $socio6->id, 'id_membresia' => 4]);
             $cuota7 = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => false, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->addDays(30)->toDateString(), 'id_socio' => $socio7->id, 'id_membresia' => 4]);
             $cuota8 = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => true, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->addDays(30)->toDateString(), 'id_socio' => $socio8->id, 'id_membresia' => 1]);
+            $cuota9 = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => true, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->addDays(30)->toDateString(), 'id_socio' => $socio9->id, 'id_membresia' => 1]);
 
 
 

@@ -32,6 +32,7 @@ class MembresiaSeeder extends Seeder
                 2 => ['creditos' => 5, 'vto' => 50]
             ]);
             $membresia->descuentos()->attach([1,2, 3, 4]);
+
             $membresia = factory(\App\Membresia::class)->create(['nro_cuotas' => 3, 'vencimiento_dias' => 120, 'precio' => 600, 'nombre' => 'membresia 3']);
             $membresia->servicios()->attach([
                 1 => ['creditos' => 10, 'vto' => 30],
@@ -47,10 +48,15 @@ class MembresiaSeeder extends Seeder
 
             $membresiaConServicioNuncaDisponible = factory(\App\Membresia::class)->create(['nro_cuotas' => 1, 'vencimiento_dias' => 30, 'precio' => 100, 'nombre' => 'membresia con servicio nunca disponible']);
             $membresiaConServicioNuncaDisponible->servicios()->attach([
-                11 => ['creditos' => null, 'vto' => 30]
+                12=> ['creditos' => null, 'vto' => 30]
             ]);
             $membresiaConServicioNuncaDisponible->descuentos()->attach([3, 4]);
 
+            $membresiaConServicioQueNoRegistraEntrada = factory(\App\Membresia::class)->create(['nro_cuotas' => 1, 'vencimiento_dias' => 30, 'precio' => 100, 'nombre' => 'membresia con servicio que no registra entrada']);
+            $membresiaConServicioQueNoRegistraEntrada->servicios()->attach([
+                13 => ['creditos' => null, 'vto' => 30]
+            ]);
+            $membresiaConServicioQueNoRegistraEntrada->descuentos()->attach([3, 4]);
 
 
 

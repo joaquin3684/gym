@@ -38,6 +38,9 @@ class ServicioSeeder extends Seeder
             ]);
 
             $servicioNuncaDisponible = factory(\App\Servicio::class)->create(['nombre' => 'Servicio nunca disponible']);
+
+
+            $servicioNoRegistraEntrada = factory(\App\Servicio::class)->create(['nombre' => 'Servicio que no registra entrada', 'registra_entrada' => 0]);
         });
 
     }

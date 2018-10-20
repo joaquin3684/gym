@@ -9,7 +9,8 @@ class Descuento extends Model
 {
     use SoftDeletes;
     protected $table = 'descuentos';
-    protected $fillable = ['nombre', 'porcentaje', 'vencimiento_dias', 'aplicable_enconjunto'];
+    //tipo 1 membresia tipo 2 socio
+    protected $fillable = ['nombre', 'porcentaje', 'vencimiento_dias', 'aplicable_enconjunto', 'tipo'];
 
     public function membresias()
     {
