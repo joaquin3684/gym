@@ -63,15 +63,17 @@ class SocioService
         $hoy = Carbon::today()->toDateString();
         $dia = Carbon::today()->dayOfWeekIso;
         $hora = Carbon::now('America/Argentina/Buenos_Aires')->toTimeString();
-
+        $horaPosterior = Carbon::now('America/Argentina/Buenos_Aires')->addHour(2)->toTimeString();
+        $idSocio = $elem['idSocio'];
+        $automatico = $elem['automatico'];
 
         /**
          * aca traigo el socio con las membresias que tengan cuotas vencidas con sus respectivas cuotas
          * y con los servicios que tenga vigentes dentro del horario actual
          */
 
-        $idSocio = $elem['idSocio'];
-        $socio = Socio::with(['membresias' => function($query) use ($hoy, $dia, $hora, $idSocio){
+        if($automatico)
+            $socio = Socio::with(['membresias' => function($query) use ($hoy, $dia, $hora, $idSocio){
             $query->where('vto', '>=', $hoy)
                 ->with(['cuotas' => function($q) use ($hoy, $idSocio){
                     $q->where('pagada', false)
@@ -93,9 +95,37 @@ class SocioService
                         ->where('entrada_hasta', '>=', $hora);
                 });
         }])->find($idSocio);
+        else
+            $socio = $socio = Socio::with(['membresias' => function($query) use ($hoy, $dia, $hora, $idSocio){
+                $query->where('vto', '>=', $hoy)
+                    ->with(['cuotas' => function($q) use ($hoy, $idSocio){
+                        $q->where('pagada', false)
+                            ->where('id_socio', $idSocio)
+                            ->where('fecha_inicio', '<=', $hoy)
+                            ->where('fecha_vto', '>', $hoy);
+                    }])
+                    ->with('servicios');
+            }, 'servicios' => function($query) use ($hoy, $dia, $hora, $horaPosterior){
+                $query->where('vto', '>=', $hoy)
+                    ->where(function($q){
+                        $q->where('creditos', '>', 0)
+                            ->orWhere('creditos', null);
+                    })
+                    ->where('registra_entrada', true)
+                    ->whereHas('dias', function($q) use ($dia, $hora, $horaPosterior) {
+                        $q->where('id', $dia)
+                            ->where(function($q) use ($hora){
+                                $q->where('entrada_desde', '<=', $hora)
+                                    ->where('entrada_hasta', '>=', $hora);
+                            })
+                            ->orWhere(function($q) use ($hora, $horaPosterior){
+                                $q->whereBetween('entrada_desde', [$hora, $horaPosterior]);
+                            });
 
+                    });
+            }])->find($idSocio);
 
-        return $socio->acceder($elem['automatico']);
+        return $socio->acceder();
     }
 
 

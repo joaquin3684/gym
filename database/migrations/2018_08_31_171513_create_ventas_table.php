@@ -25,8 +25,10 @@ class CreateVentasTable extends Migration
             $table->foreign('id_socio')->references('id')->on('socios');
             $table->integer('id_membresia')->unsigned();
             $table->foreign('id_membresia')->references('id')->on('membresias');
-            $table->integer('id_descuento')->unsigned()->nullable();
-            $table->foreign('id_descuento')->references('id')->on('descuentos');
+            $table->integer('id_descuento_membresia')->unsigned()->nullable();
+            $table->foreign('id_descuento_membresia')->references('id')->on('descuentos');
+            $table->integer('id_descuento_socio')->unsigned()->nullable();
+            $table->foreign('id_descuento_socio')->references('id')->on('descuentos');
 
             $table->timestamps();
         });

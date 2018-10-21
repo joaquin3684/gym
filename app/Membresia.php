@@ -50,13 +50,13 @@ class Membresia extends Model
             $cuota->save();
         } else {
             $descuentos = $this->buscarDescuentos($socio, $descuento);
-
+            $descuentoDeSocio = $descuentos->first(function($descuento){return $descuento->tipo == 2;});
             $precio = $this->aplicarDescuento($descuentos);
             $this->crearCuotas($precio, $socio);
             $vto = Carbon::today()->addDays($this->vencimiento_dias)->toDateString();
             $this->socios()->attach($socio->id, ['vto' => $vto]);
             $this->adjuntarServicios($socio);
-            Venta::create(['fecha' => Carbon::today()->toDateString(), 'precio' => $precio, 'id_membresia' => $this->id, 'id_socio' => $socio->id, 'cantidad' => $cantidad, 'id_descuento' => is_null($descuento) ? null : $descuento->id]);
+            Venta::create(['fecha' => Carbon::today()->toDateString(), 'precio' => $precio, 'id_membresia' => $this->id, 'id_socio' => $socio->id, 'cantidad' => $cantidad, 'id_descuento_membresia' => is_null($descuento) ? null : $descuento->id, 'id_descuento_socio' => is_null($descuentoDeSocio)? null : $descuentoDeSocio->id]);
             $precio = $precio/ $this->nro_cuotas;
         }
 

@@ -13,10 +13,10 @@ class DescuentoSeeder extends Seeder
     public function run()
     {
         Db::transaction(function(){
-            factory(\App\Descuento::class)->create(['nombre' => 'descuento socio 1', 'aplicable_enconjunto' => true]);
-            factory(\App\Descuento::class)->create(['nombre' => 'descuento socio 2']);
-            factory(\App\Descuento::class)->create(['nombre' => 'descuento membresia 1', 'aplicable_enconjunto' => true]);
-            factory(\App\Descuento::class)->create(['nombre' => 'descuento membresia 2']);
+            factory(\App\Descuento::class)->create(['nombre' => 'descuento socio 1', 'aplicable_enconjunto' => true, 'tipo' => 2]);
+            factory(\App\Descuento::class)->create(['nombre' => 'descuento socio 2','tipo' => 2]);
+            factory(\App\Descuento::class)->create(['nombre' => 'descuento membresia 1', 'aplicable_enconjunto' => true, 'tipo' => 1]);
+            factory(\App\Descuento::class)->create(['nombre' => 'descuento membresia 2', 'tipo' => 1]);
         });
 
     }

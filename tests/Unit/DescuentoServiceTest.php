@@ -23,7 +23,7 @@ class DescuentoServiceTest extends TestCase
     public function testCrearDescuento()
     {
 
-        $data = ['nombre' => 'prueba', 'porcentaje' => 50, 'vencimiento_dias' => 30, 'aplicable_enconjunto' => true];
+        $data = ['nombre' => 'prueba', 'porcentaje' => 50, 'vencimiento_dias' => 30, 'aplicable_enconjunto' => true, 'tipo' => 1];
         $this->service->crear($data);
         $this->assertDatabaseHas('descuentos', $data);
     }
@@ -31,7 +31,7 @@ class DescuentoServiceTest extends TestCase
     public function testUpdateDescuento()
     {
         factory(\App\Descuento::class)->create();
-        $data = ['nombre' => 'prueba', 'porcentaje' => 50, 'vencimiento_dias' => 30, 'aplicable_enconjunto' => true, 'id' => 1];
+        $data = ['nombre' => 'prueba', 'porcentaje' => 50, 'vencimiento_dias' => 30, 'aplicable_enconjunto' => true, 'id' => 1, 'tipo' => 1];
 
         $this->service->update($data, $data['id']);
         $this->assertDatabaseHas('descuentos', $data);

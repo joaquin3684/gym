@@ -46,7 +46,7 @@ class Socio extends Model
         return $this->hasMany('App\Accesos','id_socio', 'id');
     }
     
-    public function acceder($automatico)
+    public function acceder()
     {
         //esto quiere decir que no tiene ningun servicio vigente
         if($this->servicios->isEmpty())
