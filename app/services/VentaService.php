@@ -13,11 +13,11 @@ class VentaService
 {
     public function ventas($fechaInicio, $fechaFin)
     {
-        return Venta::with('socio', 'membresia', 'descuento')->whereBetween('fecha', [$fechaInicio, $fechaFin])->get();
+        return Venta::with('socio', 'membresia', 'descuentoMembresia', 'descuentoSocio')->whereBetween('fecha', [$fechaInicio, $fechaFin])->get();
     }
 
     public function historialCompra($idSocio)
     {
-        return Venta::with('socio', 'membresia', 'descuento')->where('id_socio', $idSocio)->get();
+        return Venta::with('socio', 'membresia', 'descuentoMembresia', 'descuentoSocio')->where('id_socio', $idSocio);
     }
 }
