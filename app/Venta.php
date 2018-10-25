@@ -19,8 +19,13 @@ class Venta extends Model
         return $this->belongsTo('App\Socio', 'id_socio', 'id');
     }
 
-    public function descuento()
+    public function descuentoMembresia()
     {
-        return $this->belongsTo('App\Descuento', 'id_descuento', 'id');
+        return $this->belongsTo('App\Descuento', 'id_descuento_membresia', 'id');
+    }
+
+    public function descuentoSocio()
+    {
+        return $this->belongsTo('App\Descuento', 'id_descuento_socio', 'id');
     }
 }
