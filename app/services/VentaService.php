@@ -18,6 +18,6 @@ class VentaService
 
     public function historialCompra($idSocio)
     {
-        return Venta::with('socio', 'membresia', 'descuentoMembresia', 'descuentoSocio')->where('id_socio', $idSocio);
+        return Venta::with('socio', 'membresia', 'descuentoMembresia', 'descuentoSocio')->where('id_socio', $idSocio)->get();
     }
 }
