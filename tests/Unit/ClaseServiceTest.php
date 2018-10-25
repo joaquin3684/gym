@@ -19,34 +19,46 @@ class ClaseServiceTest extends TestCase
         $this->artisan('migrate', ['--database' => 'mysql_testing']);
         $this->artisan('db:seed', ['--class' => 'DiasSeeder', '--database' => 'mysql_testing']);
         $this->artisan('db:seed', ['--class' => 'ServicioSeeder', '--database' => 'mysql_testing']);
+        $this->artisan('db:seed', ['--class' => 'ClasesSeeder', '--database' => 'mysql_testing']);
     }
 
     public function testUpdateClase()
     {
 
-        factory(\App\Clase::class)->create();
+        $clase = factory(\App\Clase::class)->create();
         $data = [
             'fecha' => \Carbon\Carbon::today()->addDay()->toDateString(),
-            'hora' => '12:00:00',
             'dia' => 'Martes',
             'id_servicio' => 2,
-            'estado' => 2
-
+            'estado' => 2,
+            'desde' => '11:00:00',
+            'hasta' => '23:00:00',
+            'entrada_desde' => '11:00:00',
+            'entrada_hasta' => '23:00:00',
         ];
 
-        $this->service->update($data, 1);
+        $this->service->update($data, $clase->id);
         $this->assertDatabaseHas('clases', $data);
     }
 
-    public function testUpdateDescuento()
+    public function testClasesEnTranscurso()
     {
-        factory(\App\Descuento::class)->create();
-        $data = ['nombre' => 'prueba', 'porcentaje' => 50, 'vencimiento_dias' => 30, 'aplicable_enconjunto' => true, 'id' => 1, 'tipo' => 1];
-
-        $this->service->update($data, $data['id']);
-        $this->assertDatabaseHas('descuentos', $data);
-
+        $clases = $this->service->clasesEnTranscurso();
+        $this->assertEquals(2, $clases->count());
     }
+
+    public function testClasesDelDia()
+    {
+        $clases = $this->service->clasesDelDia();
+        $this->assertEquals(3, $clases->count());
+    }
+
+    public function testClasesFuturas()
+    {
+        $clases = $this->service->clasesFuturas();
+        $this->assertEquals(3, $clases->count());
+    }
+
 
 
 }

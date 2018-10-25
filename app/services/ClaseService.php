@@ -44,12 +44,12 @@ class ClaseService
     public function clasesEnTranscurso()
     {
         $ahora = Carbon::now()->toTimeString();
-        return Clase::where('desde', '<=', $ahora)->where('hasta', '>=', $ahora);
+        return Clase::where('desde', '<=', $ahora)->where('hasta', '>=', $ahora)->where('fecha', Carbon::today()->toDateString());
     }
 
     public function clasesFuturas()
     {
-
+        return Clase::where('fecha', '>', Carbon::today()->toDateString());
     }
 
 }

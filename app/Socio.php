@@ -35,7 +35,6 @@ class Socio extends Model
         return $this->belongsToMany('App\Servicio', 'socio_servicio', 'id_socio', 'id_servicio')->withPivot('creditos', 'vto');
     }
 
-
     public function cuotasPendientes()
     {
         return $this->hasMany('App\Cuota', 'id_socio', 'id')->where('pagada', 0);
