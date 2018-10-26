@@ -37,5 +37,15 @@ class ClaseController extends Controller
     {
         return $this->service->clasesFuturas();
     }
+
+    public function registrarAlumnos(Request $request)
+    {
+        $this->service->registrarAlumnos($request->all());
+    }
+
+    public function sacarAlumnos(Request $request)
+    {
+        $this->service->sacarAlumnos($request->all());
+    }
  
 }

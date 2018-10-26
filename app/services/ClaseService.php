@@ -23,17 +23,19 @@ class ClaseService
 
     public function crear($elem)
     {
-        $clase = Clase::create($elem);
+        Clase::create($elem);
     }
 
     public function registrarAlumnos($elem)
     {
-
+        $clase = Clase::find($elem['id']);
+        $clase->alumnos()->attach($elem['alumnos']);
     }
 
     public function sacarAlumnos($elem)
     {
-
+        $clase = Clase::find($elem['id']);
+        $clase->alumnos()->detach($elem['alumnos']);
     }
 
     public function clasesDelDia()

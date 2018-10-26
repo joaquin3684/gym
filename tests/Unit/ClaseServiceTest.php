@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\services\ClaseService;
+use App\Socio;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -59,6 +60,29 @@ class ClaseServiceTest extends TestCase
         $this->assertEquals(3, $clases->count());
     }
 
+
+    public function testRegistrarAlumnos()
+    {
+        $socio1 = factory(Socio::class)->create();
+        $socio2 = factory(Socio::class)->create();
+        $data = ['id' => 1, 'alumnos' => [$socio1->id, $socio2->id]];
+        $this->service->registrarAlumnos($data);
+
+        $this->assertDatabaseHas('clases_socios', ['id_clase' => 1, 'id_socio' => 1]);
+        $this->assertDatabaseHas('clases_socios', ['id_clase' => 1, 'id_socio' => 2]);
+    }
+
+    public function testSacarAlumnos()
+    {
+        $socio1 = factory(Socio::class)->create();
+        $socio2 = factory(Socio::class)->create();
+        $data = ['id' => 1, 'alumnos' => [$socio1->id, $socio2->id]];
+        $this->service->registrarAlumnos($data);
+
+        $this->service->sacarAlumnos($data);
+        $this->assertDatabaseMissing('clases_socios', ['id_clase' => 1, 'id_socio' => 1]);
+        $this->assertDatabaseMissing('clases_socios', ['id_clase' => 1, 'id_socio' => 2]);
+    }
 
 
 }

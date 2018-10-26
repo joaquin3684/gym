@@ -13,5 +13,11 @@ class Clase extends Model
     protected $table = 'clases';
     protected $fillable = ['fecha', 'dia', 'id_servicio', 'estado', 'desde', 'hasta', 'entrada_desde', 'entrada_hasta'];
 
+    public function alumnos()
+    {
+        return $this->belongsToMany('App\Socio', 'clases_socios', 'id_clase', 'id_socio');
+    }
+
+
 
 }
