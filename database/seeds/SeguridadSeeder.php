@@ -32,6 +32,7 @@ class SeguridadSeeder extends Seeder
 
 
         $user = factory(App\User::class)->create(['id_perfil' => 1, 'name' => 'prueba', 'password' => Hash::make('prueba')]);
+        $user2 = factory(App\User::class)->create(['id_perfil' => 1, 'name' => 'tadeo', 'password' => Hash::make('tadeo')]);
 
        // $user->perfil()->attach($perfil->id);
         $perfil->pantallas()->attach($pantalla->id);
