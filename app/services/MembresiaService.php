@@ -26,6 +26,7 @@ class MembresiaService
         }
         $membresia->servicios()->attach($servicios);
         $membresia->descuentos()->attach($elem['descuentos']);
+        return $membresia->id;
     }
 
     public function update($elem, $id)
@@ -41,6 +42,7 @@ class MembresiaService
 
         $membresia->servicios()->sync($servicios);
         $membresia->descuentos()->sync($elem['descuentos']);
+        return $membresia->id;
     }
 
     public function find($id)

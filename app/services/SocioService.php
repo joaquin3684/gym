@@ -22,6 +22,7 @@ class SocioService
     {
         $socio = new Socio($elem);
         $socio->save();
+        return $socio->id;
     }
 
     public function update($elem, $id)
@@ -29,6 +30,7 @@ class SocioService
         $socio = Socio::find($id);
         $socio->fill($elem);
         $socio->save();
+        return $socio->id;
     }
 
     public function find($id)
@@ -135,4 +137,8 @@ class SocioService
     }
 
 
+    public function sociosConCompra()
+    {
+        $socios = Socio::with('venta');
+    }
 }

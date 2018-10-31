@@ -21,12 +21,12 @@ class ClaseServiceTest extends TestCase
         $this->artisan('db:seed', ['--class' => 'DiasSeeder', '--database' => 'mysql_testing']);
         $this->artisan('db:seed', ['--class' => 'ServicioSeeder', '--database' => 'mysql_testing']);
         $this->artisan('db:seed', ['--class' => 'ClasesSeeder', '--database' => 'mysql_testing']);
+        $this->artisan('db:seed', ['--class' => 'ProfesoresSeeder', '--database' => 'mysql_testing']);
     }
 
-    public function testUpdateClase()
+    public function testCrearClase()
     {
 
-        $clase = factory(\App\Clase::class)->create();
         $data = [
             'fecha' => \Carbon\Carbon::today()->addDay()->toDateString(),
             'dia' => 'Martes',
@@ -36,14 +36,41 @@ class ClaseServiceTest extends TestCase
             'hasta' => '23:00:00',
             'entrada_desde' => '11:00:00',
             'entrada_hasta' => '23:00:00',
+            'profesores' => [1,2]
         ];
-
-        $this->service->update($data, $clase->id);
+        $this->service->crear($data);
+        unset($data['profesores']);
         $this->assertDatabaseHas('clases', $data);
+        $this->assertDatabaseHas('clase_profesor', ['id_clase' => 7, 'id_profesor' => 1]);
+        $this->assertDatabaseHas('clase_profesor', ['id_clase' => 7, 'id_profesor' => 2]);
+    }
+
+    public function testUpdateClase()
+    {
+
+        $clase = factory(\App\Clase::class)->create();
+            $clase->profesores()->attach([1,2]);
+        $data = [
+            'fecha' => \Carbon\Carbon::today()->addDay()->toDateString(),
+            'dia' => 'Martes',
+            'id_servicio' => 2,
+            'estado' => 2,
+            'desde' => '11:00:00',
+            'hasta' => '23:00:00',
+            'entrada_desde' => '11:00:00',
+            'entrada_hasta' => '23:00:00',
+            'profesores' => [1]
+        ];
+        $this->service->update($data, $clase->id);
+        unset($data['profesores']);
+        $this->assertDatabaseHas('clases', $data);
+        $this->assertDatabaseHas('clase_profesor', ['id_clase' => $clase->id, 'id_profesor' => 1]);
+        $this->assertDatabaseMissing('clase_profesor', ['id_clase' => $clase->id, 'id_profesor' => 2]);
     }
 
     public function testClasesEnTranscurso()
     {
+
         $clases = $this->service->clasesEnTranscurso();
         $this->assertEquals(2, $clases->count());
     }

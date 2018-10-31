@@ -21,6 +21,9 @@ class VelocidadSeeder extends Seeder
                     5 => ['desde' => '17:00:00', 'hasta' => '20:00:00'],
                 ]);
             });
+
+            factory(\App\Socio::class, 1000)->create();
         });
+
     }
 }

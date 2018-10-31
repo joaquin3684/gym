@@ -18,6 +18,9 @@ class Clase extends Model
         return $this->belongsToMany('App\Socio', 'clases_socios', 'id_clase', 'id_socio');
     }
 
-
+    public function profesores()
+    {
+        return $this->belongsToMany('App\Profesor', 'clase_profesor', 'id_clase', 'id_profesor');
+    }
 
 }

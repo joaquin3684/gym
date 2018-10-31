@@ -25,6 +25,7 @@ class ServicioService
             $ar[$dia['id']] = ['desde' => $dia['desde'], 'hasta' => $dia['hasta'], 'entrada_desde' => $dia['entrada_desde'], 'entrada_hasta' => $dia['entrada_hasta']];
         }
         $servicio->dias()->attach($ar);
+        return $servicio->id;
     }
 
     public function update($elem, $id)
@@ -38,6 +39,7 @@ class ServicioService
             $ar[$dia['id']] = ['desde' => $dia['desde'], 'hasta' => $dia['hasta'], 'entrada_desde' => $dia['entrada_desde'], 'entrada_hasta' => $dia['entrada_hasta']];
         }
         $servicio->dias()->sync($ar);
+        return $servicio->id;
     }
 
     public function delete($id)

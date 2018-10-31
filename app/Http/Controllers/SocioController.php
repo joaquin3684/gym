@@ -18,7 +18,10 @@ class SocioController extends Controller
 
     public function store(Request $request)
     {
-        $this->service->crear($request->all());
+        return Db::transaction(function() use ($request){
+            $this->service->crear($request->all());
+
+        });
     }
 
 
@@ -29,7 +32,10 @@ class SocioController extends Controller
 
     public function update($id, Request $request)
     {
-        $this->service->update($request->all(), $id);
+        return Db::transaction(function() use ($request, $id){
+            $this->service->update($request->all(), $id);
+        });
+
     }
 
     public function all()
@@ -39,7 +45,7 @@ class SocioController extends Controller
 
     public function comprar(Request $request)
     {
-        DB::transaction(function () use ($request){
+         DB::transaction(function () use ($request){
             $this->service->comprar($request->all());
         });
     }
@@ -56,5 +62,8 @@ class SocioController extends Controller
         return $this->service->accesos($idSocio);
     }
 
-
+    public function sociosConCompras()
+    {
+        return $this->service->sociosConCompras();
+    }
 }

@@ -15,7 +15,8 @@ class DescuentoService
 {
     public function crear($elem)
     {
-        Descuento::create($elem);
+        $descuento = Descuento::create($elem);
+        return $descuento->id;
     }
 
     public function update($elem, $id)
@@ -23,6 +24,7 @@ class DescuentoService
         $descuento = Descuento::find($id);
         $descuento->fill($elem);
         $descuento->save();
+        return $descuento->id;
     }
 
     public function delete($id)

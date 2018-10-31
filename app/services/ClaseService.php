@@ -19,11 +19,15 @@ class ClaseService
         $clase = Clase::find($id);
         $clase->fill($elem);
         $clase->save();
+        $clase->profesores()->sync($elem['profesores']);
+        return $clase->id;
     }
 
     public function crear($elem)
     {
-        Clase::create($elem);
+        $clase = Clase::create($elem);
+        $clase->profesores()->attach($elem['profesores']);
+        return $clase->id;
     }
 
     public function registrarAlumnos($elem)

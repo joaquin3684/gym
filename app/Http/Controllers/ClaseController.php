@@ -14,11 +14,17 @@ class ClaseController extends Controller
         $this->service = new ClaseService();
     }
 
+    public function create(Request $request)
+    {
+        return  Db::transaction(function() use ($request){
+            $this->service->crear($request->all());
+        });
+    }
 
 
     public function update(Request $request, $id)
     {
-        Db::transaction(function() use ($request, $id){
+      return  Db::transaction(function() use ($request, $id){
             $this->service->update($request->all(), $id);
         });
     }

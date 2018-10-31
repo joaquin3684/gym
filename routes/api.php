@@ -75,4 +75,13 @@ Route::group(['middleware' => ['permisos', 'jwt.auth']], function() {
     Route::get('clase/clasesFuturas', 'ClaseController@clasesFuturas');
     Route::post('clase/registrarAlumnos', 'ClaseController@registrarAlumnos');
     Route::post('clase/sacarAlumnos', 'ClaseController@sacarAlumnos');
+    Route::post('clase/crear', 'ClaseController@create');
+
+    // PROFESOR
+
+    Route::put('profesor/editar/{id}', 'ProfesorController@update');
+    Route::get('profesor/all', 'ProfesorController@all');
+    Route::get('profesor/find/{id}', 'ProfesorController@find');
+    Route::post('profesor/borrar', 'ProfesorController@delete');
+    Route::post('profesor/crear', 'ProfesorController@create');
 });
