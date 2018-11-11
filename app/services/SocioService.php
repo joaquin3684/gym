@@ -92,7 +92,7 @@ class SocioService
                 })
                 ->where('registra_entrada', true)
                 ->whereHas('dias', function($q) use ($dia, $hora) {
-                    $q->where('id', $dia)
+                    $q->where('id_dia', $dia)
                         ->where('entrada_desde', '<=', $hora)
                         ->where('entrada_hasta', '>=', $hora);
                 });
@@ -115,7 +115,7 @@ class SocioService
                     })
                     ->where('registra_entrada', true)
                     ->whereHas('dias', function($q) use ($dia, $hora, $horaPosterior) {
-                        $q->where('id', $dia)
+                        $q->where('id_dia', $dia)
                             ->where(function($q) use ($hora){
                                 $q->where('entrada_desde', '<=', $hora)
                                     ->where('entrada_hasta', '>=', $hora);
@@ -140,5 +140,7 @@ class SocioService
     public function sociosConCompra()
     {
         $socios = Socio::with('venta');
+
     }
+
 }

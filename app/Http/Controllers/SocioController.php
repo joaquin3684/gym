@@ -35,7 +35,6 @@ class SocioController extends Controller
         return Db::transaction(function() use ($request, $id){
             $this->service->update($request->all(), $id);
         });
-
     }
 
     public function all()

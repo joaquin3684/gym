@@ -28,7 +28,7 @@ class EntradaTest extends TestCase
     {
         $data = ['idSocio' => 1, 'automatico' => true];
         $valor = $this->service->acceder($data);
-        $this->assertEquals($valor, 1);
+        $this->assertEquals(1, $valor);
         $this->assertDatabaseHas('accesos', ['id_socio' => 1, 'id_servicio' => 11]);
         $this->assertDatabaseHas('socio_servicio', ['id_socio' => 1, 'id_servicio' => 11, 'creditos' => 99]);
     }

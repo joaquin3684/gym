@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class ClaseProfesor extends Migration
+class CreatePagosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -16,17 +16,16 @@ class ClaseProfesor extends Migration
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
-        Schema::create('clase_profesor', function (Blueprint $table) {
-            $table->integer('id_clase')->unsigned();
-            $table->foreign('id_clase')->references('id')->on('clases');
+        Schema::create('pago_profesores', function (Blueprint $table) {
+            $table->increments('id');
+            $table->date('fecha');
+            $table->double('pago');
             $table->integer('id_profesor')->unsigned();
             $table->foreign('id_profesor')->references('id')->on('profesores');
-            $table->boolean('pagada')->default(0);
-            $table->string('tipo_pago');
-            $table->double('precio');
             $table->timestamps();
         });
-        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+
     }
 
     /**
@@ -38,7 +37,8 @@ class ClaseProfesor extends Migration
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
-        Schema::dropIfExists('clase_profesor');
+        Schema::dropIfExists('pago_profesores');
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+
     }
 }

@@ -11,6 +11,7 @@ namespace App\services;
 
 use App\Accesos;
 use App\Servicio;
+use App\ServicioProfesorDia;
 use App\Socio;
 
 class ServicioService
@@ -20,11 +21,16 @@ class ServicioService
         $servicio = new Servicio($elem);
         $servicio->save();
         $dias = $elem['dias'];
-        $ar = array();
         foreach ($dias as $dia) {
-            $ar[$dia['id']] = ['desde' => $dia['desde'], 'hasta' => $dia['hasta'], 'entrada_desde' => $dia['entrada_desde'], 'entrada_hasta' => $dia['entrada_hasta']];
+            foreach($dia['horarios'] as $horario)
+            {
+                foreach($horario['profesores'] as $profesor)
+                {
+                    $a = ['id_dia' => $dia['id'], 'id_servicio' => $servicio->id, 'desde' => $horario['desde'], 'hasta' => $horario['hasta'], 'entrada_desde' => $horario['entrada_desde'], 'entrada_hasta' => $horario['entrada_hasta'], 'id_profesor' => $profesor];
+                    ServicioProfesorDia::create($a);
+                }
+            }
         }
-        $servicio->dias()->attach($ar);
         return $servicio->id;
     }
 
@@ -34,30 +40,36 @@ class ServicioService
         $servicio->fill($elem);
         $servicio->save();
         $dias = $elem['dias'];
-        $ar = array();
+        ServicioProfesorDia::where('id_servicio', $servicio->id)->delete();
+
         foreach ($dias as $dia) {
-            $ar[$dia['id']] = ['desde' => $dia['desde'], 'hasta' => $dia['hasta'], 'entrada_desde' => $dia['entrada_desde'], 'entrada_hasta' => $dia['entrada_hasta']];
+            foreach($dia['horarios'] as $horario)
+            {
+                foreach($horario['profesores'] as $profesor)
+                {
+                    $a = ['id_dia' => $dia['id'], 'id_servicio' => $servicio->id, 'desde' => $horario['desde'], 'hasta' => $horario['hasta'], 'entrada_desde' => $horario['entrada_desde'], 'entrada_hasta' => $horario['entrada_hasta'], 'id_profesor' => $profesor];
+                    ServicioProfesorDia::create($a);
+                }
+            }
         }
-        $servicio->dias()->sync($ar);
         return $servicio->id;
     }
 
     public function delete($id)
     {
         $servicio = Servicio::find($id);
-        $servicio->dias()->detach();
+        ServicioProfesorDia::where('id_servicio', $servicio->id)->delete();
         Servicio::destroy($id);
-
     }
 
     public function find($id)
     {
-        return Servicio::with('dias')->find($id);
+        return ServicioProfesorDia::with('servicio')->where('id_servicio', $id)->get();
     }
 
     public function servicios()
     {
-        return Servicio::all();
+        return ServicioProfesorDia::with('servicio')->get();
     }
 
     public function devolverEntradas($elem)

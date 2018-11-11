@@ -17,6 +17,7 @@ class MembresiaSeeder extends Seeder
 
             $this->call(DescuentoSeeder::class);
             $this->call(DiasSeeder::class);
+            $this->call(ProfesoresSeeder::class);
             $this->call(ServicioSeeder::class);
 
             $membresia = factory(\App\Membresia::class)->create(['nro_cuotas' => 1, 'vencimiento_dias' => 30, 'precio' => 100, 'nombre' => 'membresia 1']);

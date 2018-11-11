@@ -16,11 +16,14 @@ class ServicioDia extends Migration
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
-        Schema::create('servicio_dia', function (Blueprint $table) {
+        Schema::create('servicio_profesor_dia', function (Blueprint $table) {
+            $table->increments('id');
             $table->integer('id_servicio')->unsigned();
             $table->foreign('id_servicio')->references('id')->on('servicios');
             $table->integer('id_dia')->unsigned();
             $table->foreign('id_dia')->references('id')->on('dias');
+            $table->integer('id_profesor')->unsigned();
+            $table->foreign('id_profesor')->references('id')->on('profesores');
             $table->time('desde');
             $table->time('hasta');
             $table->time('entrada_desde')->nullable();
@@ -39,7 +42,7 @@ class ServicioDia extends Migration
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
-        Schema::dropIfExists('servicio_dia');
+        Schema::dropIfExists('servicio_profesor_dia');
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

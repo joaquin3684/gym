@@ -40,6 +40,11 @@ class Socio extends Model
         return $this->hasMany('App\Cuota', 'id_socio', 'id')->where('pagada', 0);
     }
 
+    public function cuotas()
+    {
+        return $this->hasMany('App\Cuota', 'id_socio', 'id');
+    }
+
     public function accesos()
     {
         return $this->hasMany('App\Accesos','id_socio', 'id');

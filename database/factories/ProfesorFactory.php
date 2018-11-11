@@ -13,5 +13,8 @@ $factory->define(App\Profesor::class, function (Faker\Generator $faker) {
         'telefono' => $faker->phoneNumber,
         'email' => $faker->email,
         'domicilio' => $faker->address,
+        'fecha_cobro_dia' => 1,
+        'cantidad_dias_cobro' => 0,
+        'fijo' => 100
     ];
 });

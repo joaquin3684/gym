@@ -13,9 +13,13 @@ class Servicio extends Model
 
     public function dias()
     {
-        return $this->belongsToMany('App\Dia', 'servicio_dia', 'id_servicio', 'id_dia')->withPivot('desde', 'hasta', 'entrada_desde', 'entrada_hasta');
+        return $this->belongsToMany('App\Dia', 'servicio_profesor_dia', 'id_servicio', 'id_dia')->groupBy('id_dia', 'desde', 'hasta')->withPivot('desde', 'hasta', 'entrada_desde', 'entrada_hasta');
     }
 
+    public function servicioProfesorDia()
+    {
+        return $this->hasMany('App\ServicioProfesorDia', 'id_servicio', 'id');
+    }
 
     public function registrarEntrada(Socio $socio)
     {

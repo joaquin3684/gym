@@ -23,4 +23,16 @@ class Clase extends Model
         return $this->belongsToMany('App\Profesor', 'clase_profesor', 'id_clase', 'id_profesor');
     }
 
+    public function tipoDePago()
+    {
+        return TipoPago::crearTipo($this->pivot->tipo_pago, $this->pivot->precio, $this);
+    }
+
+    public function pagar()
+    {
+        $this->pivot->pagada = true;
+        $this->save();
+        $tipo = $this->tipoDePago();
+        return $tipo->pagar();
+    }
 }

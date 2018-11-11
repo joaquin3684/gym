@@ -16,25 +16,55 @@ class ServicioSeeder extends Seeder
 
             factory(\App\Servicio::class, 10)->create()->each(function($servicio, $key){
                 $servicio->dias()->attach([
-                    1 => ['desde' => '7:00:00', 'hasta' => '22:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '22:00:00'],
-                    2 => ['desde' => '7:00:00', 'hasta' => '22:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '22:00:00'],
-                    3 => ['desde' => '7:00:00', 'hasta' => '22:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '22:00:00'],
-                    4 => ['desde' => '7:00:00', 'hasta' => '22:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '22:00:00'],
-                    5 => ['desde' => '7:00:00', 'hasta' => '22:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '22:00:00'],
-                    6 => ['desde' => '7:00:00', 'hasta' => '22:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '22:00:00'],
-                    7 => ['desde' => '17:00:00', 'hasta' => '20:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '22:00:00'],
+                    1 => ['desde' => '7:00:00', 'hasta' => '15:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '15:00:00', 'id_profesor' => 1],
+                    2 => ['desde' => '7:00:00', 'hasta' => '15:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '15:00:00', 'id_profesor' => 1],
+                    3 => ['desde' => '7:00:00', 'hasta' => '15:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '15:00:00', 'id_profesor' => 1],
+                    4 => ['desde' => '7:00:00', 'hasta' => '15:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '15:00:00', 'id_profesor' => 1],
+                    5 => ['desde' => '7:00:00', 'hasta' => '15:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '15:00:00', 'id_profesor' => 1],
+                    6 => ['desde' => '7:00:00', 'hasta' => '15:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '15:00:00', 'id_profesor' => 1],
+                    7 => ['desde' => '7:00:00', 'hasta' => '15:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '15:00:00', 'id_profesor' => 1],
+                ]);
+
+                $servicio->dias()->attach([
+                    1 => ['desde' => '15:00:00', 'hasta' => '24:00:00', 'entrada_desde' => '15:00:00', 'entrada_hasta' => '24:00:00', 'id_profesor' => 2],
+                    2 => ['desde' => '15:00:00', 'hasta' => '24:00:00', 'entrada_desde' => '15:00:00', 'entrada_hasta' => '24:00:00', 'id_profesor' => 2],
+                    3 => ['desde' => '15:00:00', 'hasta' => '24:00:00', 'entrada_desde' => '15:00:00', 'entrada_hasta' => '24:00:00', 'id_profesor' => 2],
+                    4 => ['desde' => '15:00:00', 'hasta' => '24:00:00', 'entrada_desde' => '15:00:00', 'entrada_hasta' => '24:00:00', 'id_profesor' => 2],
+                    5 => ['desde' => '15:00:00', 'hasta' => '24:00:00', 'entrada_desde' => '15:00:00', 'entrada_hasta' => '24:00:00', 'id_profesor' => 2],
+                    6 => ['desde' => '15:00:00', 'hasta' => '24:00:00', 'entrada_desde' => '15:00:00', 'entrada_hasta' => '24:00:00', 'id_profesor' => 2],
+                    7 => ['desde' => '15:00:00', 'hasta' => '24:00:00', 'entrada_desde' => '15:00:00', 'entrada_hasta' => '24:00:00', 'id_profesor' => 2],
+                ]);
+
+                $servicio->dias()->attach([
+                    1 => ['desde' => '15:00:00', 'hasta' => '24:00:00', 'entrada_desde' => '15:00:00', 'entrada_hasta' => '24:00:00', 'id_profesor' => 1],
+                    2 => ['desde' => '15:00:00', 'hasta' => '24:00:00', 'entrada_desde' => '15:00:00', 'entrada_hasta' => '24:00:00', 'id_profesor' => 1],
+                    3 => ['desde' => '15:00:00', 'hasta' => '24:00:00', 'entrada_desde' => '15:00:00', 'entrada_hasta' => '24:00:00', 'id_profesor' => 1],
+                    4 => ['desde' => '15:00:00', 'hasta' => '24:00:00', 'entrada_desde' => '15:00:00', 'entrada_hasta' => '24:00:00', 'id_profesor' => 1],
+                    5 => ['desde' => '15:00:00', 'hasta' => '24:00:00', 'entrada_desde' => '15:00:00', 'entrada_hasta' => '24:00:00', 'id_profesor' => 1],
+                    6 => ['desde' => '15:00:00', 'hasta' => '24:00:00', 'entrada_desde' => '15:00:00', 'entrada_hasta' => '24:00:00', 'id_profesor' => 1],
+                    7 => ['desde' => '15:00:00', 'hasta' => '24:00:00', 'entrada_desde' => '15:00:00', 'entrada_hasta' => '24:00:00', 'id_profesor' => 1],
                 ]);
             });
 
-            $servicio = factory(\App\Servicio::class)->create(['nombre' => 'Entrada gym'])->dias()->attach([
-                1 => ['desde' => '7:00:00', 'hasta' => '22:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '22:00:00'],
-                2 => ['desde' => '7:00:00', 'hasta' => '22:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '22:00:00'],
-                3 => ['desde' => '7:00:00', 'hasta' => '22:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '22:00:00'],
-                4 => ['desde' => '7:00:00', 'hasta' => '22:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '22:00:00'],
-                5 => ['desde' => '7:00:00', 'hasta' => '22:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '22:00:00'],
-                6 => ['desde' => '7:00:00', 'hasta' => '22:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '22:00:00'],
-                7 => ['desde' => '7:00:00', 'hasta' => '22:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '22:00:00'],
+            $servicio = factory(\App\Servicio::class)->create(['nombre' => 'Entrada gym']);
+                $servicio->dias()->attach([
+                    1 => ['desde' => '7:00:00', 'hasta' => '15:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '15:00:00', 'id_profesor' => 1],
+                    2 => ['desde' => '7:00:00', 'hasta' => '15:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '15:00:00', 'id_profesor' => 1],
+                    3 => ['desde' => '7:00:00', 'hasta' => '15:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '15:00:00', 'id_profesor' => 1],
+                    4 => ['desde' => '7:00:00', 'hasta' => '15:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '15:00:00', 'id_profesor' => 1],
+                    5 => ['desde' => '7:00:00', 'hasta' => '15:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '15:00:00', 'id_profesor' => 1],
+                    6 => ['desde' => '7:00:00', 'hasta' => '15:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '15:00:00', 'id_profesor' => 1],
+                    7 => ['desde' => '7:00:00', 'hasta' => '15:00:00', 'entrada_desde' => '7:00:00', 'entrada_hasta' => '15:00:00', 'id_profesor' => 1],
 
+            ]);
+            $servicio->dias()->attach([
+                1 => ['desde' => '15:00:00', 'hasta' => '24:00:00', 'entrada_desde' => '15:00:00', 'entrada_hasta' => '24:00:00', 'id_profesor' => 2],
+                2 => ['desde' => '15:00:00', 'hasta' => '24:00:00', 'entrada_desde' => '15:00:00', 'entrada_hasta' => '24:00:00', 'id_profesor' => 2],
+                3 => ['desde' => '15:00:00', 'hasta' => '24:00:00', 'entrada_desde' => '15:00:00', 'entrada_hasta' => '24:00:00', 'id_profesor' => 2],
+                4 => ['desde' => '15:00:00', 'hasta' => '24:00:00', 'entrada_desde' => '15:00:00', 'entrada_hasta' => '24:00:00', 'id_profesor' => 2],
+                5 => ['desde' => '15:00:00', 'hasta' => '24:00:00', 'entrada_desde' => '15:00:00', 'entrada_hasta' => '24:00:00', 'id_profesor' => 2],
+                6 => ['desde' => '15:00:00', 'hasta' => '24:00:00', 'entrada_desde' => '15:00:00', 'entrada_hasta' => '24:00:00', 'id_profesor' => 2],
+                7 => ['desde' => '15:00:00', 'hasta' => '24:00:00', 'entrada_desde' => '15:00:00', 'entrada_hasta' => '24:00:00', 'id_profesor' => 2]
             ]);
 
             $servicioNuncaDisponible = factory(\App\Servicio::class)->create(['nombre' => 'Servicio nunca disponible']);

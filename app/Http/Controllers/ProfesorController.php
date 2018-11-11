@@ -49,4 +49,9 @@ class ProfesorController extends Controller
         });
     }
 
+    public function profesoresAPagar()
+    {
+        $this->service->profesoresAPagar();
+    }
+
 }

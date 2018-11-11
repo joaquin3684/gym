@@ -23,6 +23,9 @@ class CreateProfesorsTable extends Migration
             $table->string('telefono');
             $table->string('email');
             $table->string('domicilio');
+            $table->integer('fijo');
+            $table->integer('fecha_cobro_dia')->nullable();
+            $table->integer('cantidad_dias_cobro')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });
