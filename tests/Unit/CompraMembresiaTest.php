@@ -227,7 +227,7 @@ class CompraMembresiaTest extends TestCase
 
         $this->assertDatabaseHas('movimientos', ['ingreso' => 100, 'concepto' => 'membresia 3', 'observacion' => null, 'tipo_pago' => 'Efectivo']);
         $this->assertDatabaseHas('cuotas', ['id_membresia' => 3, 'id_socio' => 1, 'pagada' => 1, 'pago' => 100, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->addDays(30)->toDateString(), 'nro_cuota' => 1]);
-        $this->assertDatabaseHas('cuotas', ['id_membresia' => 3, 'id_socio' => 1, 'pagada' => 1, 'pago' => 100, 'fecha_inicio' => Carbon::today()->addDays(30)->toDateString(), 'fecha_vto' => Carbon::today()->addDays(60)->toDateString(), 'nro_cuota' => 2]);
+        $this->assertDatabaseHas('cuotas', ['id_membresia' => 3, 'id_socio' => 1, 'pagada' => 0, 'pago' => 100, 'fecha_inicio' => Carbon::today()->addDays(30)->toDateString(), 'fecha_vto' => Carbon::today()->addDays(60)->toDateString(), 'nro_cuota' => 2]);
         $this->assertDatabaseHas('cuotas', ['id_membresia' => 3, 'id_socio' => 1, 'pagada' => 0, 'pago' => 100, 'fecha_inicio' => Carbon::today()->addDays(60)->toDateString(), 'fecha_vto' => Carbon::today()->addDays(120)->toDateString(), 'nro_cuota' => 3]);
         $this->assertDatabaseHas('ventas', ['fecha' => Carbon::today()->toDateString(), 'precio' => 300, 'id_membresia' => 3, 'id_socio' => 1, 'cantidad' => 1, 'id_descuento_membresia' => 3, 'id_descuento_socio' => null]);
 

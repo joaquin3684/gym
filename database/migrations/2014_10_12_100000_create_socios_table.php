@@ -18,14 +18,14 @@ class CreateSociosTable extends Migration
 
         Schema::create('socios', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('nombre');
-            $table->string('genero');
-            $table->string('email');
-            $table->string('apellido');
-            $table->string('celular');
-            $table->string('domicilio');
-            $table->date('fecha_nacimiento');
-            $table->integer('dni');
+            $table->string('nombre')->nullable();
+            $table->string('genero')->nullable();
+            $table->string('email')->nullable();
+            $table->string('apellido')->nullable();
+            $table->string('celular')->nullable();
+            $table->string('domicilio')->nullable();
+            $table->date('fecha_nacimiento')->nullable();
+            $table->integer('dni')->nullable();
             $table->integer('id_descuento')->unsigned()->nullable();
             $table->foreign('id_descuento')->references('id')->on('descuentos');
             $table->timestamps();

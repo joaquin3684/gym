@@ -63,6 +63,6 @@ class SocioController extends Controller
 
     public function sociosConCompras()
     {
-        return $this->service->sociosConCompras();
+        return $this->service->sociosConCompra();
     }
 }

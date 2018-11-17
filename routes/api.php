@@ -12,7 +12,7 @@ Route::post('login', 'LoginController@login');
 
 Route::group(['middleware' => ['permisos', 'jwt.auth']], function() {
 
-//SOCIO
+    //SOCIO
     Route::post('socio/acceder', 'SocioController@acceder');
     Route::post('socio/comprar', 'SocioController@comprar');
 
@@ -22,14 +22,14 @@ Route::group(['middleware' => ['permisos', 'jwt.auth']], function() {
     Route::get('socio/find/{id}', 'SocioController@show');
     Route::get('socio/accesos/{id}', 'SocioController@accesos');
 
-//CAJA
+    //CAJA
 
     Route::post('caja/ingreso', 'CajaController@ingreso');
     Route::post('caja/egreso', 'CajaController@egreso');
     Route::post('caja/movimientos', 'CajaController@movimientos');
 
 
-//MEMBRESIA
+    //MEMBRESIA
 
     Route::get('membresia/all', 'MembresiaController@membresias');
     Route::get('membresia/allConTodo', 'MembresiaController@membresiasConTodo');
@@ -38,16 +38,16 @@ Route::group(['middleware' => ['permisos', 'jwt.auth']], function() {
     Route::get('membresia/find/{id}', 'MembresiaController@find');
     Route::post('membresia/borrar', 'MembresiaController@delete');
 
-//VENTAS
+    //VENTAS
 
     Route::post('ventas/all', 'VentaController@ventas');
     Route::get('ventas/historialCompra/{idSocio}', 'VentaController@historialCompra');
 
- // ACCESOS
+     // ACCESOS
 
     Route::post('accesos/all', 'AccesosController@accesos');
 
- // SERVICIOS
+    // SERVICIOS
 
     Route::get('servicio/all', 'ServicioController@servicios');
     Route::post('servicio/crear', 'ServicioController@store');
@@ -83,5 +83,5 @@ Route::group(['middleware' => ['permisos', 'jwt.auth']], function() {
     Route::get('profesor/all', 'ProfesorController@all');
     Route::get('profesor/find/{id}', 'ProfesorController@find');
     Route::post('profesor/borrar', 'ProfesorController@delete');
-    Route::post('profesor/crear', 'ProfesorController@create');
+    Route::post('profesor/crear', 'ProfesorController@store');
 });

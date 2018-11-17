@@ -35,7 +35,7 @@ class SocioService
 
     public function find($id)
     {
-        return Socio::with('descuento')->find($id);
+        return Socio::with('descuento', 'cuotasPendientes')->find($id);
     }
 
     public function all()
@@ -139,7 +139,7 @@ class SocioService
 
     public function sociosConCompra()
     {
-        $socios = Socio::with('venta');
+        return Socio::with('venta');
 
     }
 
