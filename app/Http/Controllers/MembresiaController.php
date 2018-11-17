@@ -18,13 +18,13 @@ class MembresiaController extends Controller
     public function store(Request $request)
     {
         return Db::transaction(function() use ($request){
-           $this->service->crear($request->all());
+           return $this->service->crear($request->all());
         });
     }
 
     public function update(Request $request, $id)
     {
-      return  Db::transaction(function() use ($request, $id){
+       Db::transaction(function() use ($request, $id){
             $this->service->update($request->all(), $id);
         });
     }
