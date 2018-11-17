@@ -25,7 +25,7 @@ class CreateProfesorsTable extends Migration
             $table->string('domicilio');
             $table->integer('fijo');
             $table->integer('fecha_cobro_dia')->nullable();
-            $table->integer('cantidad_dias_cobro')->default(0);
+            $table->integer('cantidad_dias_cobro')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
