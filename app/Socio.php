@@ -37,7 +37,7 @@ class Socio extends Model
 
     public function cuotasPendientes()
     {
-        return $this->hasMany('App\Cuota', 'id_socio', 'id')->where('pagada', 0);
+        return $this->hasMany('App\Cuota', 'id_socio', 'id')->where('pagada', 0)->where('fecha_vto', '>', Carbon::today()->toDateString() );
     }
 
     public function cuotas()
