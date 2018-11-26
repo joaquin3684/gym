@@ -72,7 +72,7 @@ class ClaseServiceTest extends TestCase
     {
 
         $clases = $this->service->clasesEnTranscurso();
-        $this->assertEquals(2, $clases->count());
+        $this->assertEquals(3, $clases->count());
     }
 
     public function testClasesDelDia()

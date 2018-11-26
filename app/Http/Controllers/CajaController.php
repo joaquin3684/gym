@@ -11,12 +11,12 @@ class CajaController extends Controller
 
     public function ingreso(Request $request)
     {
-        CajaService::ingreso($request['monto'], $request['concepto'], $request['observacion'], $request['tipoPago']);
+        CajaService::ingreso($request['monto'], $request['concepto'], $request['observacion'], $request['tipoPago'], $request['userId']);
     }
 
     public function egreso(Request $request)
     {
-        CajaService::ingreso($request['monto'], $request['concepto'], $request['observacion'], $request['tipoPago']);
+        CajaService::ingreso($request['monto'], $request['concepto'], $request['observacion'], $request['tipoPago'], $request['userId']);
     }
 
     public function movimientos(Request $request)

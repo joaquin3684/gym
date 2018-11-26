@@ -18,11 +18,13 @@ class CajaServiceTest extends TestCase
     {
         parent::setUp();
         $this->service = new CajaService();
+        $this->artisan('migrate', ['--database' => 'mysql_testing']);
+        $this->artisan('db:seed', ['--class' => 'SeguridadSeeder', '--database' => 'mysql_testing']);
 
     }
     public function testIngreso()
     {
-        CajaService::ingreso(100, 'prueba', 'prueba', 'prueba');
+        CajaService::ingreso(100, 'prueba', 'prueba', 'prueba', 1);
 
         $this->assertDatabaseHas('movimientos', ['ingreso' => 100, 'egreso' => 0, 'concepto' => 'prueba', 'observacion' => 'prueba', 'tipo_pago' => 'prueba', 'fecha' => Carbon::today()->toDateString()]);
 
@@ -30,7 +32,7 @@ class CajaServiceTest extends TestCase
 
     public function testEgreso()
     {
-        CajaService::egreso(100, 'prueba', 'prueba', 'prueba');
+        CajaService::egreso(100, 'prueba', 'prueba', 'prueba', 1);
 
         $this->assertDatabaseHas('movimientos', ['ingreso' => 0, 'egreso' => 100, 'concepto' => 'prueba', 'observacion' => 'prueba', 'tipo_pago' => 'prueba', 'fecha' => Carbon::today()->toDateString()]);
 

@@ -21,6 +21,11 @@ class Servicio extends Model
         return $this->hasMany('App\ServicioProfesorDia', 'id_servicio', 'id');
     }
 
+    public function clases()
+    {
+        return $this->hasMany('App\Clase', 'id_servicio', 'id');
+    }
+
     public function registrarEntrada(Socio $socio)
     {
         if ($this->pivot->creditos != null) {

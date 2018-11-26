@@ -21,6 +21,7 @@ class CreateSociosTable extends Migration
             $table->string('nombre')->nullable();
             $table->string('genero')->nullable();
             $table->string('email')->nullable();
+            $table->string('nro_socio')->nullable();
             $table->string('apellido')->nullable();
             $table->string('celular')->nullable();
             $table->string('domicilio')->nullable();

@@ -11,7 +11,7 @@ class Clase extends Model
 
     use SoftDeletes;
     protected $table = 'clases';
-    protected $fillable = ['fecha', 'dia', 'id_servicio', 'estado', 'desde', 'hasta', 'entrada_desde', 'entrada_hasta'];
+    protected $fillable = ['fecha', 'dia', 'id_servicio', 'estado', 'desde', 'hasta', 'entrada_desde', 'entrada_hasta', 'id_dia'];
 
     public function alumnos()
     {
@@ -21,6 +21,11 @@ class Clase extends Model
     public function profesores()
     {
         return $this->belongsToMany('App\Profesor', 'clase_profesor', 'id_clase', 'id_profesor');
+    }
+
+    public function servicio()
+    {
+        return $this->belongsTo('App\Servicio', 'id_servicio', 'id');
     }
 
     public function tipoDePago()
@@ -34,5 +39,31 @@ class Clase extends Model
         $this->save();
         $tipo = $this->tipoDePago();
         return $tipo->pagar();
+    }
+
+    public function registrarEntrada(Socio $socio)
+    {
+        $servicio = $socio->servicios->first(function($serv){ return $serv->id = $this->id_servicio;});
+        if ($servicio->pivot->creditos != null) {
+            $creditos = --$servicio->pivot->creditos;
+            $servicio->pivot->save();
+   //         $socio->servicios()->updateExistingPivot($this->id_servicio, ['creditos' => $creditos]);
+        }
+        $this->alumnos()->attach($socio->id);
+
+    }
+
+    public function devolverEntrada(Socio $socio)
+    {
+        $servicio = $socio->servicios->first(function($serv){ return $serv->id = $this->id_servicio;});
+
+        if($servicio->pivot->creditos != null)
+        {
+            $creditos = $servicio->pivot->creditos++;
+            $servicio->pivot->save();
+     //       $socio->servicios()->updateExistingPivot($this->id, ['creditos' => $creditos]);
+        }
+
+        $this->alumnos()->detach($socio->id);
     }
 }

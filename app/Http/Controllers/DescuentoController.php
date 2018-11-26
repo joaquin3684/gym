@@ -17,7 +17,7 @@ class DescuentoController extends Controller
     public function store(Request $request)
     {
        return  Db::transaction(function() use ($request){
-            $this->service->crear($request->all());
+           return $this->service->crear($request->all());
         });
     }
 

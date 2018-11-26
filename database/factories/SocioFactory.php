@@ -19,6 +19,7 @@ $factory->define(App\Socio::class, function (Faker\Generator $faker) {
             return factory(App\Descuento::class)->create()->id;
         },
         'genero' => 'masculino',
-        'email' => 'email'
+        'email' => 'email',
+        'nro_socio' => 1
     ];
 });

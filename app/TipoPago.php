@@ -7,9 +7,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TipoPago
 {
-    use SoftDeletes;
-    protected $table = 'servicios';
-    protected $fillable = ['nombre', 'creditos_minimos', 'registra_entrada'];
 
     public static function crearTipo($tipo, $precio, $clase)
     {

@@ -24,7 +24,6 @@ class SocioController extends Controller
         });
     }
 
-
     public function show($id)
     {
         return $this->service->find($id);
@@ -45,7 +44,7 @@ class SocioController extends Controller
     public function comprar(Request $request)
     {
          DB::transaction(function () use ($request){
-            $this->service->comprar($request->all());
+            $this->service->comprar($request->all(), $request['userId']);
         });
     }
 

@@ -4,7 +4,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class SocioSeeder extends Seeder
+class EntradaSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,6 +16,31 @@ class SocioSeeder extends Seeder
         DB::transaction(function(){
 
             $this->call(MembresiaSeeder::class);
+
+            factory(\App\Clase::class)->create(['dia' => 'Lunes', 'id_servicio' => 11, 'id_dia' => 1]);
+            factory(\App\Clase::class)->create(['dia' => 'Martes', 'id_servicio' => 11, 'id_dia' => 2]);
+            factory(\App\Clase::class)->create(['dia' => 'Miercoles', 'id_servicio' => 11, 'id_dia' => 3]);
+            factory(\App\Clase::class)->create(['dia' => 'Jueves', 'id_servicio' => 11, 'id_dia' => 4]);
+            factory(\App\Clase::class)->create(['dia' => 'Viernes', 'id_servicio' => 11, 'id_dia' => 5]);
+            factory(\App\Clase::class)->create(['dia' => 'Sabado', 'id_servicio' => 11, 'id_dia' => 6]);
+            factory(\App\Clase::class)->create(['dia' => 'Domingo', 'id_servicio' => 11, 'id_dia' => 7]);
+
+            factory(\App\Clase::class)->create(['dia' => 'Lunes', 'id_servicio' => 2, 'id_dia' => 1]);
+            factory(\App\Clase::class)->create(['dia' => 'Martes', 'id_servicio' => 2, 'id_dia' => 2]);
+            factory(\App\Clase::class)->create(['dia' => 'Miercoles', 'id_servicio' => 2, 'id_dia' => 3]);
+            factory(\App\Clase::class)->create(['dia' => 'Jueves', 'id_servicio' => 2, 'id_dia' => 4]);
+            factory(\App\Clase::class)->create(['dia' => 'Viernes', 'id_servicio' => 2, 'id_dia' => 5]);
+            factory(\App\Clase::class)->create(['dia' => 'Sabado', 'id_servicio' => 2, 'id_dia' => 6]);
+            factory(\App\Clase::class)->create(['dia' => 'Domingo', 'id_servicio' => 2, 'id_dia' => 7]);
+
+            factory(\App\Clase::class)->create(['dia' => 'Lunes', 'id_servicio' => 1, 'id_dia' => 1]);
+            factory(\App\Clase::class)->create(['dia' => 'Martes', 'id_servicio' => 1, 'id_dia' => 2]);
+            factory(\App\Clase::class)->create(['dia' => 'Miercoles', 'id_servicio' => 1, 'id_dia' => 3]);
+            factory(\App\Clase::class)->create(['dia' => 'Jueves', 'id_servicio' => 1, 'id_dia' => 4]);
+            factory(\App\Clase::class)->create(['dia' => 'Viernes', 'id_servicio' => 1, 'id_dia' => 5]);
+            factory(\App\Clase::class)->create(['dia' => 'Sabado', 'id_servicio' => 1, 'id_dia' => 6]);
+            factory(\App\Clase::class)->create(['dia' => 'Domingo', 'id_servicio' => 1, 'id_dia' => 7]);
+
 
             $socio1 = factory(\App\Socio::class)->create();
             $socio1->membresias()->attach([
@@ -95,13 +120,16 @@ class SocioSeeder extends Seeder
 
             $cuota = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => true, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->toDateString(), 'id_socio_membresia' => 1]);
             $cuota2 = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => true, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->toDateString(), 'id_socio_membresia' => 2]);
-            $cuota3 = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => true, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->toDateString(), 'id_socio_membresia' => 3]);
-            $cuota4 = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => true, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->toDateString(), 'id_socio_membresia' => 4]);
-            $cuota5 = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => true, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->toDateString(), 'id_socio_membresia' => 5]);
-            $cuota6 = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => true, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->toDateString(), 'id_socio_membresia' => 6]);
-            $cuota7 = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => false, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->addDays(30)->toDateString(), 'id_socio_membresia' => 7]);
-            $cuota8 = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => true, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->addDays(30)->toDateString(), 'id_socio_membresia' => 8]);
-            $cuota9 = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => true, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->addDays(30)->toDateString(), 'id_socio_membresia' => 9]);
+            $cuota2 = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => true, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->toDateString(), 'id_socio_membresia' => 3]);
+            $cuota3 = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => true, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->toDateString(), 'id_socio_membresia' => 4]);
+            $cuota4 = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => true, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->toDateString(), 'id_socio_membresia' => 5]);
+            $cuota5 = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => true, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->toDateString(), 'id_socio_membresia' => 6]);
+            $cuota6 = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => true, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->toDateString(), 'id_socio_membresia' => 7]);
+            $cuota7 = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => false, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->addDays(30)->toDateString(), 'id_socio_membresia' => 8]);
+            $cuota8 = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => true, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->addDays(30)->toDateString(), 'id_socio_membresia' => 9]);
+            $cuota9 = factory(\App\Cuota::class)->create(['pago' => 100, 'pagada' => true, 'fecha_inicio' => Carbon::today()->toDateString(), 'fecha_vto' => Carbon::today()->addDays(30)->toDateString(), 'id_socio_membresia' => 10]);
+
+
 
 
 

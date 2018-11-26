@@ -64,12 +64,12 @@ class ServicioService
 
     public function find($id)
     {
-        return ServicioProfesorDia::with('servicio')->where('id_servicio', $id)->get();
+        return ServicioProfesorDia::with('servicio', 'profesor', 'dia')->where('id_servicio', $id)->get();
     }
 
     public function servicios()
     {
-        return ServicioProfesorDia::with('servicio')->get();
+        return ServicioProfesorDia::with('servicio', 'profesor', 'dia')->get();
     }
 
     public function devolverEntradas($elem)

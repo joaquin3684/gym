@@ -10,6 +10,7 @@ namespace App\services;
 
 
 use App\Clase;
+use App\Socio;
 use Carbon\Carbon;
 
 class ClaseService
@@ -20,7 +21,6 @@ class ClaseService
         $clase->fill($elem);
         $clase->save();
         $clase->profesores()->sync($elem['profesores']);
-        return $clase->id;
     }
 
     public function crear($elem)
@@ -42,20 +42,51 @@ class ClaseService
         $clase->alumnos()->detach($elem['alumnos']);
     }
 
+    public function all()
+    {
+        return Clase::with('servicio', 'profesores', 'alumnos')->get();
+    }
+
     public function clasesDelDia()
     {
-        return Clase::where('fecha', Carbon::today()->toDateString());
+        return Clase::with('profesores', 'servicio', 'alumnos')->where('fecha', Carbon::today()->toDateString())->get();
     }
 
     public function clasesEnTranscurso()
     {
         $ahora = Carbon::now()->toTimeString();
-        return Clase::where('desde', '<=', $ahora)->where('hasta', '>=', $ahora)->where('fecha', Carbon::today()->toDateString());
+        return Clase::with('profesores', 'servicio', 'alumnos')->where('entrada_desde', '<=', $ahora)->where('hasta', '>=', $ahora)->where('fecha', Carbon::today()->toDateString());
     }
 
     public function clasesFuturas()
     {
-        return Clase::where('fecha', '>', Carbon::today()->toDateString());
+        return Clase::with('profesores', 'servicio', 'alumnos')->where('fecha', '>', Carbon::today()->toDateString());
+    }
+
+    public function registrarEntradas($elem)
+    {
+        $cl = $elem['clase'];
+        $clase = Clase::find($cl);
+        foreach ($elem['socios'] as $socio) {
+            $soc = Socio::find($socio);
+           $clase->registrarEntrada($soc);
+
+        }
+    }
+
+    public function devolverEntradas($elem)
+    {
+        $clases = $elem['clases'];
+        foreach ($elem['socios'] as $socio) {
+            $soc = Socio::with(['servicios', 'clases' => function ($q) use ($clases) {
+                $q->whereIn('id_clase', $clases);
+            }])->find($socio);
+
+            $soc->clases->each(function(Clase $clase) use ($soc){
+                $clase->devolverEntrada($soc);
+
+            });
+        }
     }
 
 }

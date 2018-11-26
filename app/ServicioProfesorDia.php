@@ -16,11 +16,11 @@ class ServicioProfesorDia extends Model
 
     public function profesor()
     {
-
+        return $this->belongsTo('App\Profesor', 'id_profesor', 'id');
     }
 
     public function dia()
     {
-
+        return $this->belongsTo('App\Dia', 'id_dia', 'id');
     }
 }

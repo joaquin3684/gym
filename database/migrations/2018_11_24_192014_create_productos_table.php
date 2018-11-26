@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateClasesTable extends Migration
+class CreateProductosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -16,19 +16,13 @@ class CreateClasesTable extends Migration
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
-        Schema::create('clases', function (Blueprint $table) {
+        Schema::create('productos', function (Blueprint $table) {
             $table->increments('id');
-            $table->date('fecha');
-            $table->string('dia');
-            $table->smallInteger('estado');
-            $table->integer('id_servicio')->unsigned()->nullable();
-            $table->foreign('id_servicio')->references('id')->on('servicios');
-            $table->integer('id_dia')->unsigned()->nullable();
-            $table->foreign('id_dia')->references('id')->on('dias');
-            $table->time('desde');
-            $table->time('hasta');
-            $table->time('entrada_desde')->nullable();
-            $table->time('entrada_hasta')->nullable();
+            $table->string('nombre');
+            $table->double('cantidad');
+            $table->double('precio_venta');
+            $table->double('precio_compra');
+            $table->double('punto_reposicion');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -45,7 +39,7 @@ class CreateClasesTable extends Migration
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
-        Schema::dropIfExists('clases');
+        Schema::dropIfExists('productos');
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
 
     }

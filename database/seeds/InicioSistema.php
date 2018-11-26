@@ -16,6 +16,7 @@ class InicioSistema extends Seeder
             $this->call(SeguridadSeeder::class);
             $this->call(DiasSeeder::class);
             $this->call(DescuentoSeeder::class);
+            $this->call(ProductoSeeder::class);
             $this->call(ProfesoresSeeder::class);
             $this->call(ServicioSeeder::class);
             $this->call(MembresiaSeeder::class);

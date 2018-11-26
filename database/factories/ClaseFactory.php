@@ -16,5 +16,6 @@ $factory->define(App\Clase::class, function (Faker\Generator $faker) {
             'hasta' => '22:00:00',
             'entrada_desde' => '01:00:00',
             'entrada_hasta' => '22:00:00',
+            'id_dia' => 1
     ];
 });

@@ -24,10 +24,8 @@ class CreateCuotasTable extends Migration
             $table->boolean('pagada');
             $table->date('fecha_inicio');
             $table->date('fecha_vto');
-            $table->integer('id_membresia')->unsigned();
-            $table->foreign('id_membresia')->references('id')->on('membresias');
-            $table->integer('id_socio')->unsigned();
-            $table->foreign('id_socio')->references('id')->on('socios');
+            $table->integer('id_socio_membresia')->unsigned();
+            $table->foreign('id_socio_membresia')->references('id')->on('socio_membresia');
             $table->timestamps();
         });
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');

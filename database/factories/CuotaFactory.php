@@ -12,8 +12,7 @@ $factory->define(App\Cuota::class, function (Faker\Generator $faker) {
         'pagada' => false,
         'fecha_inicio' => '2017-02-03',
         'fecha_vto' => '2017-02-03',
-        'id_membresia' => 1,
-        'id_socio' => 1,
+        'id_socio_membresia' => 1,
         'nro_cuota' => 1
     ];
 });

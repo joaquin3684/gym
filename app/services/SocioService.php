@@ -35,20 +35,22 @@ class SocioService
 
     public function find($id)
     {
-        return Socio::with('descuento', 'cuotasPendientes')->find($id);
+        return Socio::with('descuento')->find($id);
     }
 
     public function all()
     {
-        return Socio::all();
+        return Socio::with(['membresias.cuotas', 'descuento', 'servicios' => function($q){
+            $q->where('vto', '>=', Carbon::today()->toDateString());
+        }])->get();
     }
 
-    public function comprar($elem)
+    public function comprar($elem, $userId)
     {
         $idSocio = $elem['idSocio'];
         $tipoPago = $elem['tipoPago'];
         $observacion = $elem['observacion'];
-        $socio = Socio::with('descuento')->find($idSocio);
+        $socio = Socio::with('descuento', 'socioMembresia.cuotas')->find($idSocio);
         foreach ($elem['membresias'] as $membresia)
         {
             $idMembresia = $membresia['id'];
@@ -56,7 +58,7 @@ class SocioService
             $cantidad = $membresia['cantidad'];
             $membresia = Membresia::find($idMembresia);
             $descuento = is_null($idDescuento) ? null : Descuento::find($idDescuento);
-            $membresia->vender($socio, $cantidad, $tipoPago, $descuento, $observacion);
+            $membresia->vender($socio, $cantidad, $tipoPago, $descuento, $userId, $observacion);
         }
     }
 
@@ -75,37 +77,54 @@ class SocioService
          */
 
         if($automatico)
-            $socio = Socio::with(['membresias' => function($query) use ($hoy, $dia, $hora, $idSocio){
-            $query->where('vto', '>=', $hoy)
-                ->with(['cuotas' => function($q) use ($hoy, $idSocio){
+            $socio = Socio::with(['socioMembresia' => function($q) use ($hoy){
+                $q->where('vto', '>=', $hoy)
+                    ->with(['cuotas' => function($q) use ($hoy){
                     $q->where('pagada', false)
-                        ->where('id_socio', $idSocio)
-                    ->where('fecha_inicio', '<=', $hoy)
+                        ->where('fecha_inicio', '<=', $hoy)
                         ->where('fecha_vto', '>', $hoy);
-                }])
+                }]);
+
+            }, 'membresias' => function($query) use ($hoy, $dia, $hora, $idSocio){
+                $query->where('vto', '>=', $hoy)
+
             ->with('servicios');
-        }, 'servicios' => function($query) use ($hoy, $dia, $hora){
-            $query->where('vto', '>=', $hoy)
+            }, 'servicios' => function($query) use ($hoy, $dia, $hora){
+                $query->where('vto', '>=', $hoy)
                 ->where(function($q){
                     $q->where('creditos', '>', 0)
                         ->orWhere('creditos', null);
                 })
                 ->where('registra_entrada', true)
-                ->whereHas('dias', function($q) use ($dia, $hora) {
-                    $q->where('id_dia', $dia)
+                ->with(['clases' => function($q) use($dia, $hora, $hoy) {
+                        $q->where('fecha', $hoy)
+                            ->where('id_dia', $dia)
+
+                            ->where('entrada_desde', '<=', $hora)
+                        ->where('entrada_hasta', '>=', $hora);
+
+                }])
+                ->whereHas('clases', function($q) use ($dia, $hora, $hoy){
+                    $q->where('fecha', $hoy)
+                        ->where('id_dia', $dia)
+
                         ->where('entrada_desde', '<=', $hora)
                         ->where('entrada_hasta', '>=', $hora);
                 });
+
         }])->find($idSocio);
         else
-            $socio = $socio = Socio::with(['membresias' => function($query) use ($hoy, $dia, $hora, $idSocio){
-                $query->where('vto', '>=', $hoy)
-                    ->with(['cuotas' => function($q) use ($hoy, $idSocio){
+            $socio = $socio = Socio::with(['socioMembresia' => function($q) use ($hoy){
+                $q->where('vto', '>=', $hoy)
+                    ->with(['cuotas' => function($q) use ($hoy){
                         $q->where('pagada', false)
-                            ->where('id_socio', $idSocio)
                             ->where('fecha_inicio', '<=', $hoy)
                             ->where('fecha_vto', '>', $hoy);
-                    }])
+                    }]);
+
+            },   'membresias' => function($query) use ($hoy, $dia, $hora, $idSocio){
+                $query->where('vto', '>=', $hoy)
+
                     ->with('servicios');
             }, 'servicios' => function($query) use ($hoy, $dia, $hora, $horaPosterior){
                 $query->where('vto', '>=', $hoy)
@@ -114,8 +133,9 @@ class SocioService
                             ->orWhere('creditos', null);
                     })
                     ->where('registra_entrada', true)
-                    ->whereHas('dias', function($q) use ($dia, $hora, $horaPosterior) {
-                        $q->where('id_dia', $dia)
+                    ->with(['clases' => function($q) use($dia, $hora, $horaPosterior, $hoy) {
+                        $q->where('fecha', $hoy)
+                            ->where('id_dia', $dia)
                             ->where(function($q) use ($hora){
                                 $q->where('entrada_desde', '<=', $hora)
                                     ->where('entrada_hasta', '>=', $hora);
@@ -123,17 +143,23 @@ class SocioService
                             ->orWhere(function($q) use ($hora, $horaPosterior){
                                 $q->whereBetween('entrada_desde', [$hora, $horaPosterior]);
                             });
+                    }])
+                ->whereHas('clases', function($q) use ($dia, $hora, $horaPosterior, $hoy){
+                    $q->where('fecha', $hoy)
+                        ->where('id_dia', $dia)
+                        ->where(function($q) use ($hora){
+                            $q->where('entrada_desde', '<=', $hora)
+                                ->where('entrada_hasta', '>=', $hora);
+                        })
+                        ->orWhere(function($q) use ($hora, $horaPosterior){
+                            $q->whereBetween('entrada_desde', [$hora, $horaPosterior]);
+                        });
+                });
 
-                    });
+
             }])->find($idSocio);
 
         return $socio->acceder();
-    }
-
-
-    public function accesos($idSocio)
-    {
-        return Accesos::with('servicio')->where('id_socio', $idSocio)->orderBy('created_at', 'desc')->limit(10)->get();
     }
 
 

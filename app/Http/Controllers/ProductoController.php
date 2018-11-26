@@ -2,28 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\services\ServicioService;
+use App\services\ProductosService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class ServicioController extends Controller
+class ProductoController extends Controller
 {
     private $service;
+
     public function __construct()
     {
-        $this->service = new ServicioService();
+        $this->service = new ProductosService();
     }
 
     public function store(Request $request)
     {
-       return  Db::transaction(function() use ($request){
-           return $this->service->crear($request->all());
+        return  Db::transaction(function() use ($request){
+            return $this->service->crear($request->all());
         });
     }
 
     public function update(Request $request, $id)
     {
-        return Db::transaction(function() use ($request, $id){
+        Db::transaction(function() use ($request, $id){
             $this->service->update($request->all(), $id);
         });
     }
@@ -38,27 +39,27 @@ class ServicioController extends Controller
         return $this->service->find($id);
     }
 
-    public function servicios()
+    public function all()
     {
-        return $this->service->servicios();
+        return $this->service->all();
     }
 
-    public function registrarEntradas(Request $request)
+    public function comprar(Request $request)
     {
         Db::transaction(function() use ($request){
-            $this->service->registrarEntradas($request->all());
+            $this->service->comprar($request->all(), $request['userId']);
         });
     }
 
-    public function devolverEntradas(Request $request)
+    public function vender(Request $request)
     {
         Db::transaction(function() use ($request){
-            $this->service->devolverEntradas($request->all());
+            $this->service->vender($request->all(), $request['userId']);
         });
     }
 
-    public function accesos($idSocio)
+    public function registrosDeStock(Request $request)
     {
-        return $this->service->accesos($idSocio);
+        return $this->service->registrosDeStock($request->all());
     }
 }

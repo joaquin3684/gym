@@ -27,6 +27,9 @@ class Permisos
         $fullPath = $request->getPathInfo();
         $path = explode("/", $fullPath);
         $pantalla = $path[1];
+        $userId = JWTAuth::decode($token)['user_id'];
+        $request->request->add(['userId' => $userId]);
+
         foreach($permisos as $permiso)
         {
             if($permiso == $pantalla)
@@ -34,14 +37,12 @@ class Permisos
                 return $next($request);
             }
         }
-        $userId = JWTAuth::decode($token)['user_id'];
         $user = User::with('perfil.pantallas.rutas')->find($userId);
         $userRoute = $user->perfil->pantallas->first(function($pantalla) use ($fullPath){
             return $pantalla->rutas->first(function($ruta) use ($fullPath){
                 return $ruta->ruta == $fullPath;
             });
         });
-
         if($userRoute == null)
         {
             throw new \RuntimeException('acceso denegado');

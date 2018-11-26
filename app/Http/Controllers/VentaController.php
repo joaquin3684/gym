@@ -15,7 +15,6 @@ class VentaController extends Controller
         $this->service = new VentaService();
     }
 
-
     public function ventas(Request $request)
     {
         $fechaInicio = $request['fechaInicio'];

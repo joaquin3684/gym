@@ -17,7 +17,7 @@ class ClaseController extends Controller
     public function create(Request $request)
     {
         return  Db::transaction(function() use ($request){
-            $this->service->crear($request->all());
+            return $this->service->crear($request->all());
         });
     }
 
@@ -44,14 +44,40 @@ class ClaseController extends Controller
         return $this->service->clasesFuturas();
     }
 
+    public function all()
+    {
+        return $this->service->all();
+    }
+
     public function registrarAlumnos(Request $request)
     {
-        $this->service->registrarAlumnos($request->all());
+        DB::transaction(function ($request){
+            $this->service->registrarAlumnos($request->all());
+
+        });
     }
 
     public function sacarAlumnos(Request $request)
     {
-        $this->service->sacarAlumnos($request->all());
+        DB::transaction(function ($request) {
+
+            $this->service->sacarAlumnos($request->all());
+        });
+    }
+
+    public function registrarEntrada(Request $request)
+    {
+        DB::transaction(function ($request) {
+            $this->service->registrarEntradas($request->all());
+        });
+    }
+
+    public function devolverEntrada(Request $request)
+    {
+        DB::transaction(function($request){
+            $this->service->devolverEntradas($request->all());
+        });
+
     }
  
 }

@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\services\ClaseService;
 use App\services\ServicioService;
 use App\services\SocioService;
 use Tests\TestCase;
@@ -14,13 +15,15 @@ class EntradaTest extends TestCase
 
     private $service;
     private $servService;
+    private $clService;
     public function setUp()
     {
         parent::setUp();
         $this->service = new SocioService();
         $this->servService = new ServicioService();
+        $this->clService = new ClaseService();
         $this->artisan('migrate', ['--database' => 'mysql_testing']);
-        $this->artisan('db:seed', ['--class' => 'SocioSeeder', '--database' => 'mysql_testing']);
+        $this->artisan('db:seed', ['--class' => 'EntradaSeeder', '--database' => 'mysql_testing']);
 
     }
 
@@ -29,7 +32,7 @@ class EntradaTest extends TestCase
         $data = ['idSocio' => 1, 'automatico' => true];
         $valor = $this->service->acceder($data);
         $this->assertEquals(1, $valor);
-        $this->assertDatabaseHas('accesos', ['id_socio' => 1, 'id_servicio' => 11]);
+        $this->assertDatabaseHas('clases_socios', ['id_socio' => 1]);
         $this->assertDatabaseHas('socio_servicio', ['id_socio' => 1, 'id_servicio' => 11, 'creditos' => 99]);
     }
 
@@ -66,7 +69,7 @@ class EntradaTest extends TestCase
         $data = ['idSocio' => 8, 'automatico' => true];
         $valor = $this->service->acceder($data);
         $this->assertEquals($valor, 1);
-        $this->assertDatabaseHas('accesos', ['id_socio' => 8, 'id_servicio' => 2]);
+        $this->assertDatabaseHas('clases_socios', ['id_socio' => 8]);
         $this->assertDatabaseHas('socio_servicio', ['id_socio' => 8, 'id_servicio' => 2, 'creditos' => 4]);
     }
 
@@ -81,15 +84,27 @@ class EntradaTest extends TestCase
     {
         $data = ['idSocio' => 7, 'automatico' => true];
         $valor = $this->service->acceder($data);
-        $this->assertEquals($valor, 2);
+        $this->assertEquals(2, $valor);
     }
 
     public function testRegistrarEntradaManual()
     {
-        $data = ['socios' => [1], 'servicios' => [11]];
-        $this->servService->registrarEntradas($data);
-        $this->assertDatabaseHas('accesos', ['id_socio' => 1, 'id_servicio' => 11]);
-        $this->assertDatabaseHas('socio_servicio', ['id_socio' => 1, 'id_servicio' => 11, 'creditos' => 99]);
+        $data = ['socios' => [1], 'clase' => 7];
+        $this->clService->registrarEntradas($data);
+        $this->assertDatabaseHas('clases_socios', ['id_socio' => 1, 'id_clase' => 7]);
+
+    }
+
+    public function testDevolverEntrada()
+    {
+        $data = ['socios' => [1], 'clase' => 7];
+        $this->clService->registrarEntradas($data);
+        $data = ['socios' => [1], 'clases' => [7]];
+
+        $this->clService->devolverEntradas($data);
+        $this->assertDatabaseMissing('clases_socios', ['id_socio' => 1, 'id_clase' => 7]);
+        $this->assertDatabaseHas('socio_servicio', ['id_socio' => 1, 'id_servicio' => 11, 'creditos' => 100]);
+
 
     }
 

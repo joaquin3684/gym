@@ -70,12 +70,15 @@ Route::group(['middleware' => ['permisos', 'jwt.auth']], function() {
     // CLASES
 
     Route::put('clase/editar/{id}', 'ClaseController@update');
-    Route::get('clase/clasesDelDia', 'ClaseController@clasesDelDia');
-    Route::get('clase/clasesEnTranscurso', 'ClaseController@clasesEnTranscurso');
-    Route::get('clase/clasesFuturas', 'ClaseController@clasesFuturas');
+    Route::post('clase/crear', 'ClaseController@create');
+    Route::get('clase/delDia', 'ClaseController@clasesDelDia');
+    Route::get('clase/enTranscurso', 'ClaseController@clasesEnTranscurso');
+    Route::get('clase/all', 'ClaseController@all');
+    Route::get('clase/futuras', 'ClaseController@clasesFuturas');
     Route::post('clase/registrarAlumnos', 'ClaseController@registrarAlumnos');
     Route::post('clase/sacarAlumnos', 'ClaseController@sacarAlumnos');
-    Route::post('clase/crear', 'ClaseController@create');
+    Route::post('clase/registrarEntrada', 'ClaseController@registrarEntrada');
+    Route::post('clase/devolverEntrada', 'ClaseController@devolverEntrada');
 
     // PROFESOR
 
@@ -84,4 +87,16 @@ Route::group(['middleware' => ['permisos', 'jwt.auth']], function() {
     Route::get('profesor/find/{id}', 'ProfesorController@find');
     Route::post('profesor/borrar', 'ProfesorController@delete');
     Route::post('profesor/crear', 'ProfesorController@store');
+
+    // PRODUCTOS
+
+    Route::put('producto/editar/{id}', 'ProductoController@update');
+    Route::get('producto/all', 'ProductoController@all');
+    Route::get('producto/find/{id}', 'ProductoController@find');
+    Route::post('producto/borrar', 'ProductoController@delete');
+    Route::post('producto/crear', 'ProductoController@store');
+
+    Route::post('producto/comprar', 'ProductoController@comprar');
+    Route::post('producto/vender', 'ProductoController@vender');
+    Route::post('producto/registrosDeStock', 'ProductoController@registrosDeStock');
 });

@@ -13,7 +13,8 @@ $factory->define(App\Movimiento::class, function (Faker\Generator $faker) {
         'fecha' => \Carbon\Carbon::today()->toDateString(),
         'observacion' => null,
         'tipo_pago' => 'Efectivo',
-        'concepto' => 'prueba'
+        'concepto' => 'prueba',
+        'id_usuario' => 1
 
     ];
 });
@@ -25,6 +26,8 @@ $factory->state(App\Movimiento::class, 'egreso', function ($faker) {
         'fecha' => \Carbon\Carbon::today()->toDateString(),
         'observacion' => null,
         'tipo_pago' => 'Efectivo',
-        'concepto' => 'prueba'
+        'concepto' => 'prueba',
+        'id_usuario' => 1
+
     ];
 });
