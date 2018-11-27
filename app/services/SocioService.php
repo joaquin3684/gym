@@ -22,6 +22,7 @@ class SocioService
     {
         $socio = new Socio($elem);
         $socio->save();
+
         return $socio->id;
     }
 

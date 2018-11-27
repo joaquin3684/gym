@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\services\ProductosService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ProductoController extends Controller
 {
@@ -18,7 +19,11 @@ class ProductoController extends Controller
     public function store(Request $request)
     {
         return  Db::transaction(function() use ($request){
-            return $this->service->crear($request->all());
+            $id = $this->service->crear($request->all());
+            if($request->hasFile('foto'))
+                Storage::putFileAs('public/productos', $request->foto, 'foto'.$id.'.jpg');
+
+            return $id;
         });
     }
 
@@ -26,6 +31,9 @@ class ProductoController extends Controller
     {
         Db::transaction(function() use ($request, $id){
             $this->service->update($request->all(), $id);
+            if($request->hasFile('foto'))
+                Storage::putFileAs('public/productos', $request->foto, 'foto'.$id.'.jpg');
+
         });
     }
 

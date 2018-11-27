@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\services\SocioService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 
 class SocioController extends Controller
@@ -19,8 +20,11 @@ class SocioController extends Controller
     public function store(Request $request)
     {
         return Db::transaction(function() use ($request){
-            $this->service->crear($request->all());
+            $id = $this->service->crear($request->all());
+            if($request->hasFile('foto'))
+                Storage::putFileAs('public/socios', $request->foto, 'foto'.$id.'.jpg');
 
+            return $id;
         });
     }
 
@@ -33,6 +37,9 @@ class SocioController extends Controller
     {
         return Db::transaction(function() use ($request, $id){
             $this->service->update($request->all(), $id);
+
+            if($request->hasFile('foto'))
+                Storage::putFileAs('public/socios', $request->foto, 'foto'.$id.'.jpg');
         });
     }
 
