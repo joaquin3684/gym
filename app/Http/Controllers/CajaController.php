@@ -16,7 +16,7 @@ class CajaController extends Controller
 
     public function egreso(Request $request)
     {
-        CajaService::ingreso($request['monto'], $request['concepto'], $request['observacion'], $request['tipoPago'], $request['userId']);
+        CajaService::egreso($request['monto'], $request['concepto'], $request['observacion'], $request['tipoPago'], $request['userId']);
     }
 
     public function movimientos(Request $request)

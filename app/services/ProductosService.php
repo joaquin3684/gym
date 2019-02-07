@@ -50,7 +50,7 @@ class ProductosService
         foreach($elem['productos'] as $producto)
         {
             $prod = Producto::find($producto['id']);
-            $prod->comprar($producto['cantidad'], $producto['precio'], $observacion, $tipoPago, $idUsuario, $socio);
+            $prod->comprar($producto['cantidad'], $observacion, $tipoPago, $idUsuario);
         }
     }
 
@@ -63,7 +63,7 @@ class ProductosService
         foreach($elem['productos'] as $producto)
         {
             $prod = Producto::find($producto['id']);
-            $prod->vender($producto['cantidad'], $producto['precio'], $observacion, $tipoPago, $idUsuario, $socio);
+            $prod->vender($producto['cantidad'], $observacion, $tipoPago, $idUsuario);
         }
     }
 
