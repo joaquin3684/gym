@@ -46,7 +46,6 @@ class ProductosService
     {
         $observacion = $elem['observacion'];
         $tipoPago = $elem['tipoPago'];
-        $socio = $elem['idSocio'];
         foreach($elem['productos'] as $producto)
         {
             $prod = Producto::find($producto['id']);
@@ -58,7 +57,6 @@ class ProductosService
     {
         $observacion = $elem['observacion'];
         $tipoPago = $elem['tipoPago'];
-        $socio = $elem['idSocio'];
 
         foreach($elem['productos'] as $producto)
         {
