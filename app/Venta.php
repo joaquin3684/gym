@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Venta extends Model
 {
     protected $table = 'ventas';
-    protected $fillable = ['fecha', 'precio', 'id_socio', 'id_membresia', 'cantidad', 'id_descuento_membresia', 'id_descuento_socio'];
+    protected $fillable = ['fecha', 'precio', 'id_socio', 'id_membresia', 'cantidad', 'id_descuento_membresia', 'id_descuento_socio', 'vto'];
 
     public function membresia()
     {
@@ -27,5 +27,10 @@ class Venta extends Model
     public function descuentoSocio()
     {
         return $this->belongsTo('App\Descuento', 'id_descuento_socio', 'id');
+    }
+
+    public function cuotas()
+    {
+        return $this->hasMany('App\Cuota', 'id_venta', 'id');
     }
 }

@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Descuento;
+use App\Membresia;
 use App\services\VentaService;
+use App\Socio;
+use App\User;
 use App\Venta;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class VentaController extends Controller
 {
@@ -27,5 +32,25 @@ class VentaController extends Controller
         return $this->service->historialCompra($idSocio);
     }
 
+    public function crear(Request $request)
+    {
+        DB::transaction(function () use ($request){
+            $idSocio = $request['idSocio'];
+
+            $socio = Socio::with('descuento', 'ventas.cuotas')->find($idSocio);
+            foreach ($request['membresias'] as $membresia)
+            {
+                $mem = Membresia::find($membresia['id']);
+                $descuento = is_null($membresia['idDescuento']) ? null : Descuento::find($membresia['idDescuento']);
+                $usuario = User::find($request['userId']);
+
+
+                $this->service->realizarCompra($socio, $request['tipoPago'], $request['observacion'], $usuario, $mem, $membresia['cantidad'], $descuento);
+            }
+
+
+
+        });
+    }
 
 }

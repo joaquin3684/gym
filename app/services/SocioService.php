@@ -5,6 +5,7 @@ use App\Accesos;
 use App\Descuento;
 use App\Membresia;
 use App\Socio;
+use App\User;
 use App\Vendible;
 use Carbon\Carbon;
 
@@ -51,7 +52,7 @@ class SocioService
         $idSocio = $elem['idSocio'];
         $tipoPago = $elem['tipoPago'];
         $observacion = $elem['observacion'];
-        $socio = Socio::with('descuento', 'socioMembresia.cuotas')->find($idSocio);
+        $socio = Socio::with('descuento', 'ventas.cuotas')->find($idSocio);
         foreach ($elem['membresias'] as $membresia)
         {
             $idMembresia = $membresia['id'];
@@ -61,6 +62,9 @@ class SocioService
             $descuento = is_null($idDescuento) ? null : Descuento::find($idDescuento);
             $membresia->vender($socio, $cantidad, $tipoPago, $descuento, $userId, $observacion);
         }
+
+
+
     }
 
     public function acceder($elem)
@@ -78,7 +82,7 @@ class SocioService
          */
 
         if($automatico)
-            $socio = Socio::with(['socioMembresia' => function($q) use ($hoy){
+            $socio = Socio::with(['ventas' => function($q) use ($hoy){
                 $q->where('vto', '>=', $hoy)
                     ->with(['cuotas' => function($q) use ($hoy){
                     $q->where('pagada', false)
@@ -115,7 +119,7 @@ class SocioService
 
         }])->find($idSocio);
         else
-            $socio = $socio = Socio::with(['socioMembresia' => function($q) use ($hoy){
+            $socio = $socio = Socio::with(['ventas' => function($q) use ($hoy){
                 $q->where('vto', '>=', $hoy)
                     ->with(['cuotas' => function($q) use ($hoy){
                         $q->where('pagada', false)
@@ -168,6 +172,14 @@ class SocioService
     {
         return Socio::with('venta');
 
+    }
+
+    public function borrarMembresia($idSocio, $idMembresia)
+    {
+        $socio = Socio::find($idSocio);
+        $membresiaSrv = new MembresiaService();
+        $membresia = $membresiaSrv->find($idMembresia);
+        $socio->borrarMembresia($membresia);
     }
 
 }

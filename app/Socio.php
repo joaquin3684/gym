@@ -31,10 +31,6 @@ class Socio extends Model
 
     }
 
-    public function socioMembresia()
-    {
-        return $this->hasMany('App\SocioMembresia', 'id_socio', 'id');
-    }
 
     public function membresias()
     {
@@ -54,18 +50,14 @@ class Socio extends Model
 
     public function servicios()
     {
-        return $this->belongsToMany('App\Servicio', 'socio_servicio', 'id_socio', 'id_servicio')->withPivot('creditos', 'vto');
+        return $this->belongsToMany('App\Servicio', 'socio_servicio', 'id_socio', 'id_servicio')->withPivot('creditos', 'vto', 'id');
     }
 
     public function cuotasPendientes()
     {
-        return $this->hasManyThrough('App\Cuota', 'App\Socio', 'id_socio', 'id_socio_membresia', 'id', 'id')->where('pagada', 0);
+        return $this->hasManyThrough('App\Cuota', 'App\Socio', 'id_socio', 'id_venta', 'id', 'id')->where('pagada', 0);
     }
 
-    public function cuotas()
-    {
-        return $this->hasMany('App\Cuota', 'id_socio', 'id');
-    }
 
     public function accesos()
     {
@@ -80,7 +72,7 @@ class Socio extends Model
             return RegistroEntrada::ENTRADA_RECHAZADA;
         }
         //esto quiere decir que tiene una membresia con la cuota vencida
-        else if($this->socioMembresia->every(function($membresia){
+        else if($this->ventas->every(function($membresia){
             return $membresia->cuotas->isNotEmpty();
         })){
             return RegistroEntrada::ENTRADA_RECHAZADA;
@@ -88,7 +80,7 @@ class Socio extends Model
         else
         {
             $i = 0;
-            $sms = $this->socioMembresia->filter(function($membresia){
+            $sms = $this->ventas->filter(function($membresia){
                 return $membresia->cuotas->isEmpty();
             });
 

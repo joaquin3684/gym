@@ -70,6 +70,6 @@ class ProductosService
         $fechaInicio = $elem['fechaInicio'];
         $fechaFin = $elem['fechaFin'];
 
-        return RegistroStock::whereBetween('fecha', [$fechaInicio, $fechaFin])->with('producto', 'usuario', 'socio')->get();
+        return RegistroStock::whereBetween('fecha', [$fechaInicio, $fechaFin])->with('producto', 'usuario')->get();
     }
 }

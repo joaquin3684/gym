@@ -3,6 +3,7 @@
 namespace App;
 
 use App\services\CajaService;
+use App\services\VentaService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -17,7 +18,7 @@ class Membresia extends Model
 
     public function cuotas()
     {
-        return $this->hasManyThrough('App\Cuota', 'App\SocioMembresia', 'id_membresia', 'id_socio_membresia', 'id', 'id');
+        return $this->hasManyThrough('App\Cuota', 'App\Venta', 'id_membresia', 'id_venta', 'id', 'id');
     }
 
     public function descuentos()
@@ -38,12 +39,11 @@ class Membresia extends Model
     public function vender(Socio $socio, $cantidad, $tipoPago, $descuento, $idUsuario, $observacion = null)
     {
 
-        $sm = $socio->socioMembresia->first(function ($sm){
+        $sm = $socio->ventas->first(function ($sm){
             return $sm->id_membresia = $this->id && $sm->cuotas->contains(function($cuota){
                  return $cuota->pagada == false;
                 });
         });
-
 
         $precio = null;
         if($sm != null)
@@ -57,25 +57,16 @@ class Membresia extends Model
             $cuota->pagada = 1;
             $cuota->save();
         } else {
-            $descuentos = $this->buscarDescuentos($socio, $descuento);
-            $descuentoDeSocio = $descuentos->first(function($descuento){return $descuento->tipo == 2;});
-            $precio = $this->aplicarDescuento($descuentos);
-
-            $vto = $this->generarVencimiento($socio);
-            $socioMembresia = SocioMembresia::create(['id_socio' => $socio->id, 'id_membresia' => $this->id, 'vto' => $vto]);
-            $this->crearCuotas($precio, $socioMembresia, Carbon::createFromFormat('Y-m-d', $vto)->subDays($this->vencimiento_dias)->toDateString());
-
-            $this->adjuntarServicios($socio);
-            Venta::create(['fecha' => Carbon::today()->toDateString(), 'precio' => $precio, 'id_membresia' => $this->id, 'id_socio' => $socio->id, 'cantidad' => $cantidad, 'id_descuento_membresia' => is_null($descuento) ? null : $descuento->id, 'id_descuento_socio' => is_null($descuentoDeSocio)? null : $descuentoDeSocio->id]);
-            $precio = $precio/ $this->nro_cuotas;
+            $srv = new VentaService();
+            $srv->crear($socio, $tipoPago, $observacion, User::find($idUsuario), $this, $descuento, $cantidad);
         }
 
-        CajaService::ingreso($precio, $this->nombre, $observacion, $tipoPago, $idUsuario);
+        //CajaService::ingreso($precio, $this->nombre, $observacion, $tipoPago, $idUsuario);
     }
 
     public function generarVencimiento(Socio $socio)
     {
-        $membresia = $socio->socioMembresia->sortByDesc(function($membresia){
+        $membresia = $socio->ventas->sortByDesc(function($membresia){
             return $membresia->vto;
         })->first();
         
@@ -150,12 +141,9 @@ class Membresia extends Model
 
         return $descuentos;
 
-
-
-
     }
 
-    public function crearCuotas($precio, SocioMembresia $socioMembresia, $fechaDesde)
+    public function crearCuotas($precio, Venta $venta, $fechaDesde)
     {
             $ar = array();
             $f = Carbon::createFromFormat('Y-m-d', $fechaDesde)->addDays(30);
@@ -163,7 +151,7 @@ class Membresia extends Model
             $ultimoVencimiento = Carbon::today()->addDays($this->vencimiento_dias);
             if($this->nro_cuotas == 1)
             {
-                $a = ['id_socio_membresia' => $socioMembresia, 'pago' => $precio/$this->nro_cuotas, 'fecha_vto' => $f->toDateString(), 'pagada' => true, 'fecha_inicio' => $f2->toDateString(), 'nro_cuota' => 1];
+                $a = ['id_venta' => $venta->id, 'pago' => $precio/$this->nro_cuotas, 'fecha_vto' => $f->toDateString(), 'pagada' => true, 'fecha_inicio' => $f2->toDateString(), 'nro_cuota' => 1];
                 array_push($ar, $a);
 
             } else {
@@ -172,7 +160,7 @@ class Membresia extends Model
                     $aux2 = $f2;
                     if ($i == $this->nro_cuotas) {
                         $aux = $ultimoVencimiento;
-                        $a = ['id_socio_membresia' => $socioMembresia, 'pago' => $precio / $this->nro_cuotas, 'fecha_vto' => $aux->toDateString(), 'pagada' => false, 'fecha_inicio' => $aux2->toDateString(), 'nro_cuota' => $i];
+                        $a = ['id_venta' => $venta->id, 'pago' => $precio / $this->nro_cuotas, 'fecha_vto' => $aux->toDateString(), 'pagada' => false, 'fecha_inicio' => $aux2->toDateString(), 'nro_cuota' => $i];
                         array_push($ar, $a);
 
 
@@ -180,9 +168,9 @@ class Membresia extends Model
                         $aux = $f;
 
                         if ($i == 1)
-                            $a = ['id_socio_membresia' => $socioMembresia,'pago' => $precio / $this->nro_cuotas, 'fecha_vto' => $aux->toDateString(), 'pagada' => true, 'fecha_inicio' => $aux2->toDateString(), 'nro_cuota' => $i];
+                            $a = ['id_venta' => $venta->id,'pago' => $precio / $this->nro_cuotas, 'fecha_vto' => $aux->toDateString(), 'pagada' => true, 'fecha_inicio' => $aux2->toDateString(), 'nro_cuota' => $i];
                         else
-                            $a = ['id_socio_membresia' => $socioMembresia, 'pago' => $precio / $this->nro_cuotas, 'fecha_vto' => $aux->toDateString(), 'pagada' => false, 'fecha_inicio' => $aux2->toDateString(), 'nro_cuota' => $i];
+                            $a = ['id_venta' => $venta->id, 'pago' => $precio / $this->nro_cuotas, 'fecha_vto' => $aux->toDateString(), 'pagada' => false, 'fecha_inicio' => $aux2->toDateString(), 'nro_cuota' => $i];
 
                         array_push($ar, $a);
 
@@ -193,7 +181,7 @@ class Membresia extends Model
 
                 }
             }
-            $socioMembresia->cuotas()->createMany($ar);
+            $venta->cuotas()->createMany($ar);
 
     }
 }

@@ -19,6 +19,7 @@ class CreateVentasTable extends Migration
         Schema::create('ventas', function (Blueprint $table) {
             $table->increments('id');
             $table->date('fecha');
+            $table->date('vto');
             $table->double('precio');
             $table->integer('cantidad')->nullable();
             $table->integer('id_socio')->unsigned();

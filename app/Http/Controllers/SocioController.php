@@ -48,12 +48,6 @@ class SocioController extends Controller
         return $this->service->all();
     }
 
-    public function comprar(Request $request)
-    {
-         DB::transaction(function () use ($request){
-            $this->service->comprar($request->all(), $request['userId']);
-        });
-    }
 
     public function acceder(Request $request)
     {
@@ -70,5 +64,12 @@ class SocioController extends Controller
     public function sociosConCompras()
     {
         return $this->service->sociosConCompra();
+    }
+
+    public function borrarMembresia(Request $request)
+    {
+        DB::transaction(function () use ($request) {
+            $this->service->borrarMembresia($request['idSocio'], $request['idMembresia']);
+        });
     }
 }

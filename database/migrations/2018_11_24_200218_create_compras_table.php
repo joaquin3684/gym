@@ -29,8 +29,6 @@ class CreateComprasTable extends Migration
             $table->date('fecha');
             $table->integer('id_usuario')->unsigned();
             $table->foreign('id_usuario')->references('id')->on('usuarios');
-            $table->integer('id_socio')->unsigned()->nullable();
-            $table->foreign('id_socio')->references('id')->on('socios');
             $table->timestamps();
         });
 
