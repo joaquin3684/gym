@@ -42,30 +42,18 @@ class SocioService
 
     public function all()
     {
-        return Socio::with(['membresias.cuotas', 'descuento', 'servicios' => function($q){
-            $q->where('vto', '>=', Carbon::today()->toDateString());
-        }])->get();
+        return Socio::with(['ventas' => function($q){
+            $q->where('vto', '>=', Carbon::today()->toDateString())
+            ->with('membresia')
+                ->with('cuotas')
+                ->with('descuentoMembresia')
+                ->with('descuentoSocio')
+                ->with('servicios');
+        },
+         'descuento'
+        ])->get();
     }
 
-    public function comprar($elem, $userId)
-    {
-        $idSocio = $elem['idSocio'];
-        $tipoPago = $elem['tipoPago'];
-        $observacion = $elem['observacion'];
-        $socio = Socio::with('descuento', 'ventas.cuotas')->find($idSocio);
-        foreach ($elem['membresias'] as $membresia)
-        {
-            $idMembresia = $membresia['id'];
-            $idDescuento = $membresia['idDescuento'];
-            $cantidad = $membresia['cantidad'];
-            $membresia = Membresia::find($idMembresia);
-            $descuento = is_null($idDescuento) ? null : Descuento::find($idDescuento);
-            $membresia->vender($socio, $cantidad, $tipoPago, $descuento, $userId, $observacion);
-        }
-
-
-
-    }
 
     public function acceder($elem)
     {
@@ -174,12 +162,5 @@ class SocioService
 
     }
 
-    public function borrarMembresia($idSocio, $idMembresia)
-    {
-        $socio = Socio::find($idSocio);
-        $membresiaSrv = new MembresiaService();
-        $membresia = $membresiaSrv->find($idMembresia);
-        $socio->borrarMembresia($membresia);
-    }
 
 }

@@ -10,6 +10,7 @@ namespace App\services;
 
 
 use App\Cuota;
+use App\User;
 use App\Venta;
 use Carbon\Carbon;
 
@@ -57,7 +58,43 @@ class CuotaService
 
     public function pagarCuota(Cuota $cuota)
     {
-        $cuota->pagada = 1;
+        $this->cambiarEstadoPagada($cuota, 1);
+    }
+
+    public function cancelarPago(Cuota $cuota, User $usuario)
+    {
+        $this->cambiarEstadoPagada($cuota, 0);
+        CajaService::egreso($cuota->pago, 'Cuota '.$cuota->nro_cuota.' '.$cuota->venta->membresia->nombre, 'Cuota mal cobrada', 'Efectivo', $usuario->id);
+    }
+
+    public function borrarCuotasDeVenta(Venta $venta)
+    {
+        $cuotas = Cuota::where('id_venta', $venta->id)->get();
+        $cuotas->each(function(Cuota $cuota){ $this->delete($cuota);});
+    }
+
+    public function delete(Cuota $cuota)
+    {
+        $cuota->delete();
+    }
+    protected $fillable = ['pago', 'pagada', 'fecha_inicio', 'fecha_vto', 'id_venta', 'nro_cuota'];
+
+    public function update(Cuota $cuota, $pago, $pagada, $fechaInicio, $fechaVto, $idVenta, $nroCuota)
+    {
+        $cuota->pago = $pago;
+        $cuota->pagada = $pagada;
+        $cuota->fecha_inicio = $fechaInicio;
+        $cuota->fecha_vto = $fechaVto;
+        $cuota->id_venta = $idVenta;
+        $cuota->nro_cuota = $nroCuota;
+
         $cuota->save();
     }
+
+    public function cambiarEstadoPagada(Cuota $cuota, $estado)
+    {
+        $this->update($cuota, $cuota->pago, $estado, $cuota->fecha_inicio, $cuota->fecha_vto, $cuota->id_venta, $cuota->nro_cuota);
+
+    }
+
 }

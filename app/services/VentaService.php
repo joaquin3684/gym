@@ -32,6 +32,12 @@ class VentaService
         return Venta::with('socio', 'membresia', 'descuentoMembresia', 'descuentoSocio')->where('id_socio', $idSocio)->get();
     }
 
+    public function delete(Venta $venta){
+        $venta->servicios()->detach();
+        $this->cuotasSrv->borrarCuotasDeVenta($venta);
+        $venta->delete();
+    }
+
     public function crear(Socio $socio, $tipoPago, $observacion, User $usuario, Membresia $membresia, $cantidad, Descuento $descuento = null)
     {
 
@@ -52,17 +58,18 @@ class VentaService
 
             $this->cuotasSrv->crearHastaFecha($venta, $vto, $membresia->nro_cuotas);
 
-            $this->adjuntarServicios($socio, $membresia);
+            $this->adjuntarServicios($socio, $membresia, $venta);
             $concepto = $membresia->nro_cuotas == 1 ? $membresia->nombre : 'Cuota 1 '. $membresia->nombre;
             CajaService::ingreso($precio/$membresia->nro_cuotas, $concepto, $observacion, $tipoPago, $usuario->id);
     }
 
     public function generarVencimiento(Socio $socio, Membresia $membresia)
     {
-        $venta = $socio->ventas->sortByDesc(function($membresia){
-            return $membresia->vto;
+        $venta = $socio->ventas->filter(function($venta) use ($membresia){
+            return $venta->id_membresia == $membresia->id;
+        })->sortByDesc(function($venta){
+            return $venta->vto;
         })->first();
-
         $hoy = Carbon::today();
         if($venta == null)
         {
@@ -103,7 +110,7 @@ class VentaService
         return $monto;
     }
 
-    public function adjuntarServicios(Socio $socio, Membresia $membresia)
+    public function adjuntarServicios(Socio $socio, Membresia $membresia, Venta $venta)
     {
         $ids = array();
         $vtoMembresia = $this->generarVencimiento($socio, $membresia);
@@ -112,7 +119,7 @@ class VentaService
             $ids[$servicio->id] = ['creditos' => $servicio->pivot->creditos, 'vto' => Carbon::createFromFormat('Y-m-d',$vtoMembresia)->subDays($membresia->vencimiento_dias)->addDays($servicio->pivot->vto)->toDateString()];
         }
 
-        $socio->servicios()->attach($ids);
+        $venta->servicios()->attach($ids);
     }
 
     public function buscarDescuentos(Socio $socio,  Membresia $membresia, Descuento $descuento = null)
@@ -141,7 +148,7 @@ class VentaService
     public function realizarCompra(Socio $socio, $tipoPago, $observacion, User $usuario, Membresia $membresia, $cantidad, Descuento $descuento = null)
     {
         $ventaConCuotasSinPagar = $socio->ventas->first(function ($venta) use($membresia){
-            return $venta->id_membresia = $membresia->id && $venta->cuotas->contains(function($cuota){
+            return $venta->id_membresia == $membresia->id && $venta->cuotas->contains(function($cuota){
                     return $cuota->pagada == false;
                 });
         });

@@ -44,12 +44,17 @@ class VentaController extends Controller
                 $descuento = is_null($membresia['idDescuento']) ? null : Descuento::find($membresia['idDescuento']);
                 $usuario = User::find($request['userId']);
 
-
                 $this->service->realizarCompra($socio, $request['tipoPago'], $request['observacion'], $usuario, $mem, $membresia['cantidad'], $descuento);
             }
 
+        });
+    }
 
-
+    public function delete(Request $request)
+    {
+        DB::transaction(function () use ($request){
+           $venta = Venta::find($request['idVenta']);
+           $this->service->delete($venta);
         });
     }
 

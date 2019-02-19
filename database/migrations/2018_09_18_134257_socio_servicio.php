@@ -16,10 +16,10 @@ class SocioServicio extends Migration
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
-        Schema::create('socio_servicio', function (Blueprint $table) {
+        Schema::create('venta_servicio', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_socio')->unsigned();
-            $table->foreign('id_socio')->references('id')->on('socios');
+            $table->integer('id_venta')->unsigned();
+            $table->foreign('id_venta')->references('id')->on('socios');
             $table->integer('id_servicio')->unsigned();
             $table->foreign('id_servicio')->references('id')->on('servicios');
             $table->integer('creditos')->nullable();
@@ -38,7 +38,7 @@ class SocioServicio extends Migration
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
-        Schema::dropIfExists('socio_servicio');
+        Schema::dropIfExists('venta_servicio');
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

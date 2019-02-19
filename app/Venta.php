@@ -14,6 +14,11 @@ class Venta extends Model
         return $this->belongsTo('App\Membresia', 'id_membresia', 'id');
     }
 
+    public function servicios()
+    {
+        return $this->belongsToMany('App\Servicio', 'venta_servicio', 'id_venta', 'id_servicio')->withPivot('creditos', 'vto', 'id');
+    }
+
     public function socio()
     {
         return $this->belongsTo('App\Socio', 'id_socio', 'id');

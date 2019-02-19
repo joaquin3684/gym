@@ -52,7 +52,6 @@ Route::group(['middleware' => ['permisos', 'jwt.auth']], function() {
 
     //SOCIO
     Route::post('socio/acceder', 'SocioController@acceder');
-    Route::post('socio/borrarMembresia', 'SocioController@borrarMembresia');
 
     Route::post('socio/crear', 'SocioController@store');
     Route::get('socio/all', 'SocioController@all');
@@ -80,7 +79,12 @@ Route::group(['middleware' => ['permisos', 'jwt.auth']], function() {
 
     Route::post('ventas/all', 'VentaController@ventas');
     Route::post('ventas/crear', 'VentaController@crear');
+    Route::post('ventas/borrar', 'VentaController@delete');
     Route::get('ventas/historialCompra/{idSocio}', 'VentaController@historialCompra');
+
+    //CUOTAS
+
+    Route::post('cuotas/cancelarPago', 'CuotaController@cancelarPago');
 
      // ACCESOS
 
