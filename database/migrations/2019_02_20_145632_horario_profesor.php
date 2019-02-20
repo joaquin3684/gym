@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDiasTable extends Migration
+class HorarioProfesor extends Migration
 {
     /**
      * Run the migrations.
@@ -16,12 +16,16 @@ class CreateDiasTable extends Migration
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
-        Schema::create('dias', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('nombre');
+        Schema::create('horario_profesor', function (Blueprint $table) {
+
+            $table->integer('id_horario')->unsigned();
+            $table->foreign('id_horario')->references('id')->on('horarios');
+            $table->integer('id_profesor')->unsigned();
+            $table->foreign('id_profesor')->references('id')->on('profesores');
             $table->timestamps();
         });
-        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
     }
 
@@ -34,8 +38,8 @@ class CreateDiasTable extends Migration
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
-        Schema::dropIfExists('dias');
-        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+        Schema::dropIfExists('horario_profesor');
 
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

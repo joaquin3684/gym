@@ -4,7 +4,7 @@ namespace App\Console;
 
 use App\Clase;
 use App\Servicio;
-use App\ServicioProfesorDia;
+use App\Horario;
 use Carbon\Carbon;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -31,7 +31,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->call(function(){
-            $spd = ServicioProfesorDia::with('servicio', 'profesor', 'dia')->get();
+            $spd = Horario::with('servicio', 'profesores')->get();
             $serv = $spd->map(function($s){
                 $ser = $s->servicio;
                 return $ser;

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\services\ServicioService;
+use App\Servicio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -17,20 +18,20 @@ class ServicioController extends Controller
     public function store(Request $request)
     {
        return  Db::transaction(function() use ($request){
-           return $this->service->crear($request->all());
+           return $this->service->crear($request['nombre'], $request['creditos_minimos'], $request['registra_entrada'], $request['dias']);
         });
     }
 
     public function update(Request $request, $id)
     {
         return Db::transaction(function() use ($request, $id){
-            $this->service->update($request->all(), $id);
+            $this->service->update($request['nombre'], $request['creditos_minimos'], $request['registra_entrada'], $request['dias'], Servicio::find($id));
         });
     }
 
     public function delete(Request $request)
     {
-        $this->service->delete($request['id']);
+        $this->service->delete(Servicio::find($request['id']));
     }
 
     public function find($id)

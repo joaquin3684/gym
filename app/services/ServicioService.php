@@ -11,65 +11,72 @@ namespace App\services;
 
 use App\Accesos;
 use App\Servicio;
-use App\ServicioProfesorDia;
+use App\Horario;
 use App\Socio;
 
 class ServicioService
 {
-    public function crear($elem)
+
+    private $horarioSrv;
+    public function __construct()
     {
-        $servicio = new Servicio($elem);
+        $this->horarioSrv = new HorarioService();
+    }
+
+    public function crear($nombre, $creditosMinimos, $registraEntrada, $dias)
+    {
+        $servicio = new Servicio();
+        $servicio->nombre =  $nombre;
+        $servicio->creditos_minimos = $creditosMinimos;
+        $servicio->registra_entrada = $registraEntrada;
         $servicio->save();
-        $dias = $elem['dias'];
+
         foreach ($dias as $dia) {
             foreach($dia['horarios'] as $horario)
-            {
-                foreach($horario['profesores'] as $profesor)
-                {
-                    $a = ['id_dia' => $dia['id'], 'id_servicio' => $servicio->id, 'desde' => $horario['desde'], 'hasta' => $horario['hasta'], 'entrada_desde' => $horario['entrada_desde'], 'entrada_hasta' => $horario['entrada_hasta'], 'id_profesor' => $profesor];
-                    ServicioProfesorDia::create($a);
-                }
-            }
+                $this->horarioSrv->crear($servicio, $dia['id'], $horario['desde'], $horario['hasta'], $horario['entrada_desde'], $horario['entrada_hasta'], $horario['profesores']);
+        }
+
+        return $servicio->id;
+    }
+
+    public function update($nombre, $creditosMinimos, $registraEntrada, $dias, Servicio $servicio)
+    {
+
+        $servicio->nombre = $nombre;
+        $servicio->creditos_minimos = $creditosMinimos;
+        $servicio->registra_entrada = $registraEntrada;
+        $servicio->save();
+
+        $horarios = Horario::where('id_servicio', $servicio->id)->get();
+        $horarios->each(function($horario){
+            $this->horarioSrv->delete($horario);
+        });
+
+        foreach ($dias as $dia) {
+            foreach($dia['horarios'] as $horario)
+                $this->horarioSrv->crear($servicio, $dia['id'], $horario['desde'], $horario['hasta'], $horario['entrada_desde'], $horario['entrada_hasta'], $horario['profesores']);
         }
         return $servicio->id;
     }
 
-    public function update($elem, $id)
+    public function delete(Servicio $servicio)
     {
-        $servicio = Servicio::find($id);
-        $servicio->fill($elem);
-        $servicio->save();
-        $dias = $elem['dias'];
-        ServicioProfesorDia::where('id_servicio', $servicio->id)->delete();
 
-        foreach ($dias as $dia) {
-            foreach($dia['horarios'] as $horario)
-            {
-                foreach($horario['profesores'] as $profesor)
-                {
-                    $a = ['id_dia' => $dia['id'], 'id_servicio' => $servicio->id, 'desde' => $horario['desde'], 'hasta' => $horario['hasta'], 'entrada_desde' => $horario['entrada_desde'], 'entrada_hasta' => $horario['entrada_hasta'], 'id_profesor' => $profesor];
-                    ServicioProfesorDia::create($a);
-                }
-            }
-        }
-        return $servicio->id;
-    }
-
-    public function delete($id)
-    {
-        $servicio = Servicio::find($id);
-        ServicioProfesorDia::where('id_servicio', $servicio->id)->delete();
-        Servicio::destroy($id);
+        $horarios = Horario::where('id_servicio', $servicio->id)->get();
+        $horarios->each(function($horario){
+            $this->horarioSrv->delete($horario);
+        });
+        $servicio->delete();
     }
 
     public function find($id)
     {
-        return ServicioProfesorDia::with('servicio', 'profesor', 'dia')->where('id_servicio', $id)->get();
+        return Servicio::with('horarios.profesores')->find($id);
     }
 
     public function servicios()
     {
-        return ServicioProfesorDia::with('servicio', 'profesor', 'dia')->get();
+        return Servicio::with('horarios.profesores')->get();
     }
 
     public function devolverEntradas($elem)

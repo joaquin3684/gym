@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class SocioServicio extends Migration
+class VentaServicio extends Migration
 {
     /**
      * Run the migrations.
@@ -19,7 +19,7 @@ class SocioServicio extends Migration
         Schema::create('venta_servicio', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('id_venta')->unsigned();
-            $table->foreign('id_venta')->references('id')->on('socios');
+            $table->foreign('id_venta')->references('id')->on('ventas');
             $table->integer('id_servicio')->unsigned();
             $table->foreign('id_servicio')->references('id')->on('servicios');
             $table->integer('creditos')->nullable();

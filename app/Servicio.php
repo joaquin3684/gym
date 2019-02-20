@@ -11,14 +11,10 @@ class Servicio extends Model
     protected $table = 'servicios';
     protected $fillable = ['nombre', 'creditos_minimos', 'registra_entrada'];
 
-    public function dias()
-    {
-        return $this->belongsToMany('App\Dia', 'servicio_profesor_dia', 'id_servicio', 'id_dia')->groupBy('id_dia', 'desde', 'hasta')->withPivot('desde', 'hasta', 'entrada_desde', 'entrada_hasta');
-    }
 
-    public function servicioProfesorDia()
+    public function horarios()
     {
-        return $this->hasMany('App\ServicioProfesorDia', 'id_servicio', 'id');
+        return $this->hasMany('App\Horario', 'id_servicio', 'id');
     }
 
     public function clases()

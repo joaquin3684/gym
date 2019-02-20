@@ -31,12 +31,6 @@ class Membresia extends Model
         return $this->belongsToMany('App\Servicio', 'membresia_servicio','id_membresia', 'id_servicio')->withPivot('creditos', 'vto');
     }
     
-    public function socios()
-    {
-        return $this->belongsToMany('App\Socio', 'socio_membresia', 'id_membresia', 'id_socio')->withPivot('vto');
-    }
-
-
     public function adjuntarServicios(Socio $socio)
     {
         $ids = array();

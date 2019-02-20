@@ -25,19 +25,6 @@ class Socio extends Model
         return $this->hasMany('App\Venta', 'id_socio', 'id');
     }
 
-    public function membresiasVigentes()
-    {
-        return $this->belongsToMany('App\Membresia', 'socio_membresia', 'id_socio', 'id_membresia')->where('vto', '>=', Carbon::today()->toDateString())->withPivot('vto');
-
-    }
-
-
-    public function membresias()
-    {
-        return $this->belongsToMany('App\Membresia', 'socio_membresia', 'id_socio', 'id_membresia')->withPivot('vto');
-    }
-
-
     public function clases()
     {
         return $this->belongsToMany('App\Clase', 'clases_socios', 'id_socio', 'id_clase');
