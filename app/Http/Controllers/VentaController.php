@@ -34,18 +34,22 @@ class VentaController extends Controller
 
     public function crear(Request $request)
     {
-        DB::transaction(function () use ($request){
+        return DB::transaction(function () use ($request){
             $idSocio = $request['idSocio'];
 
             $socio = Socio::with('descuento', 'ventas.cuotas')->find($idSocio);
+            $ventas = collect();
             foreach ($request['membresias'] as $membresia)
             {
                 $mem = Membresia::find($membresia['id']);
                 $descuento = is_null($membresia['idDescuento']) ? null : Descuento::find($membresia['idDescuento']);
                 $usuario = User::find($request['userId']);
 
-                $this->service->realizarCompra($socio, $request['tipoPago'], $request['observacion'], $usuario, $mem, $membresia['cantidad'], $descuento);
+                $venta =  $this->service->realizarCompra($socio, $request['tipoPago'], $request['observacion'], $usuario, $mem, $membresia['cantidad'], $descuento);
+                $ventas->push($venta->id);
             }
+            return Venta::whereIn('id', $ventas->toArray())
+                ->with('cuotas', 'servicios', 'membresia', 'descuentoMembresia', 'descuentoSocio')->get();
 
         });
     }

@@ -61,6 +61,7 @@ class VentaService
             $this->adjuntarServicios($socio, $membresia, $venta);
             $concepto = $membresia->nro_cuotas == 1 ? $membresia->nombre : 'Cuota 1 '. $membresia->nombre;
             CajaService::ingreso($precio/$membresia->nro_cuotas, $concepto, $observacion, $tipoPago, $usuario->id);
+            return $venta;
     }
 
     public function generarVencimiento(Socio $socio, Membresia $membresia)
@@ -154,9 +155,9 @@ class VentaService
         });
 
         if($ventaConCuotasSinPagar != null)
-            $this->pagarCuota($ventaConCuotasSinPagar, $tipoPago, $usuario, $observacion, $membresia);
+            return $this->pagarCuota($ventaConCuotasSinPagar, $tipoPago, $usuario, $observacion, $membresia);
          else
-            $this->crear($socio, $tipoPago, $observacion, $usuario, $membresia, $cantidad, $descuento);
+            return $this->crear($socio, $tipoPago, $observacion, $usuario, $membresia, $cantidad, $descuento);
 
     }
 
@@ -171,6 +172,6 @@ class VentaService
         $this->cuotasSrv->pagarCuota($cuota);
 
         CajaService::ingreso($cuota->pago, 'Cuota '.$cuota->nro_cuota.' '.$membresia->nombre, $observacion, $tipoPago, $usuario->id);
-
+        return $venta;
     }
 }
