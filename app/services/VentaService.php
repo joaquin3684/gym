@@ -7,6 +7,7 @@
  */
 namespace App\services;
 
+use App\Clase;
 use App\Descuento;
 use App\Membresia;
 use App\Socio;
@@ -24,12 +25,12 @@ class VentaService
 
     public function ventas($fechaInicio, $fechaFin)
     {
-        return Venta::with('socio', 'membresia', 'descuentoMembresia', 'descuentoSocio')->whereBetween('fecha', [$fechaInicio, $fechaFin])->get();
+        return Venta::with('socio', 'membresia', 'descuentoMembresia', 'descuentoSocio', 'cuotas')->whereBetween('fecha', [$fechaInicio, $fechaFin])->get();
     }
 
     public function historialCompra($idSocio)
     {
-        return Venta::with('socio', 'membresia', 'descuentoMembresia', 'descuentoSocio')->where('id_socio', $idSocio)->get();
+        return Venta::with('socio', 'membresia', 'descuentoMembresia', 'descuentoSocio', 'cuotas')->where('id_socio', $idSocio)->get();
     }
 
     public function delete(Venta $venta){
@@ -173,5 +174,25 @@ class VentaService
 
         CajaService::ingreso($cuota->pago, 'Cuota '.$cuota->nro_cuota.' '.$membresia->nombre, $observacion, $tipoPago, $usuario->id);
         return $venta;
+    }
+
+    public function descontarCredito(Venta $venta, Clase $clase)
+    {
+        $servicio = $venta->servicios->first(function($servicio) use ($clase){return $servicio->id == $clase->id_servicio;});
+
+        if ($servicio->pivot->creditos != null) {
+            --$servicio->pivot->creditos;
+            $servicio->pivot->save();
+        }
+    }
+
+    public function retornarCredito(Venta $venta, Clase $clase)
+    {
+        $servicio = $venta->servicios->first(function($servicio) use ($clase){return $servicio->id == $clase->id_servicio;});
+
+        if ($servicio->pivot->creditos != null) {
+            ++$servicio->pivot->creditos;
+            $servicio->pivot->save();
+        }
     }
 }

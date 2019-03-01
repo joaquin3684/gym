@@ -10,24 +10,40 @@ namespace App\services;
 
 
 use App\Clase;
+use App\Servicio;
 use App\Socio;
 use Carbon\Carbon;
 
 class ClaseService
 {
-    public function update($elem, $id)
+    public function update($fecha, Servicio $servicio, $desde, $hasta, $entradaDesde, $entradaHasta, $estado, $profesores, Clase $clase)
     {
-        $clase = Clase::find($id);
-        $clase->fill($elem);
+
+        $clase->fecha = $fecha;
+        $clase->id_servicio = $servicio->id;
+        $clase->desde = $desde;
+        $clase->hasta = $hasta;
+        $clase->entrada_desde = $entradaDesde;
+        $clase->entrada_hasta = $entradaHasta;
+        $clase->estado = $estado;
         $clase->save();
-        $clase->profesores()->sync($elem['profesores']);
+        $clase->profesores()->sync($profesores);
+        return $clase;
     }
 
-    public function crear($elem)
+    public function crear($fecha, Servicio $servicio, $desde, $hasta, $entradaDesde, $entradaHasta, $estado, $profesores)
     {
-        $clase = Clase::create($elem);
-        $clase->profesores()->attach($elem['profesores']);
-        return $clase->id;
+        $clase = new Clase();
+        $clase->fecha = $fecha;
+        $clase->id_servicio = $servicio->id;
+        $clase->desde = $desde;
+        $clase->hasta = $hasta;
+        $clase->entrada_desde = $entradaDesde;
+        $clase->entrada_hasta = $entradaHasta;
+        $clase->estado = $estado;
+        $clase->save();
+        $clase->profesores()->attach($profesores);
+        return $clase;
     }
 
     public function registrarAlumnos($elem)
@@ -42,9 +58,12 @@ class ClaseService
         $clase->alumnos()->detach($elem['alumnos']);
     }
 
-    public function all()
+    public function all($fechaDesde, $fechaHasta)
     {
-        return Clase::with('servicio', 'profesores', 'alumnos')->get();
+        return Clase::with('servicio', 'profesores', 'alumnos')
+            ->where('fecha', '>=', $fechaDesde)
+            ->where('fecha', '<=', $fechaHasta)
+            ->get();
     }
 
     public function clasesDelDia()
@@ -63,30 +82,35 @@ class ClaseService
         return Clase::with('profesores', 'servicio', 'alumnos')->where('fecha', '>', Carbon::today()->toDateString());
     }
 
-    public function registrarEntradas($elem)
+    public function registrarEntradas(Clase $clase, $socios)
     {
-        $cl = $elem['clase'];
-        $clase = Clase::find($cl);
-        foreach ($elem['socios'] as $socio) {
-            $soc = Socio::find($socio);
-           $clase->registrarEntrada($soc);
+        $clase->alumnos()->attach($socios->map(function($socio){return $socio->id;})->toArray());
+        $ventaSrv = new VentaService();
 
-        }
+        $socios->each(function($socio) use ($clase, $ventaSrv){
+            $venta = $socio->ventas->filter(function($venta) use ($clase) { return $venta->servicios->contains(function($servicio) use($clase){return $servicio->id == $clase->id_servicio;}); })
+                ->sortBy(function($venta){return $venta->id;})
+                ->first();
+
+            $ventaSrv->descontarCredito($venta, $clase);
+
+        });
     }
 
-    public function devolverEntradas($elem)
+    public function devolverEntradas(Clase $clase, $socios)
     {
-        $clases = $elem['clases'];
-        foreach ($elem['socios'] as $socio) {
-            $soc = Socio::with(['servicios', 'clases' => function ($q) use ($clases) {
-                $q->whereIn('id_clase', $clases);
-            }])->find($socio);
+        $clase->alumnos()->detach($socios->map(function($socio){return $socio->id;})->toArray());
 
-            $soc->clases->each(function(Clase $clase) use ($soc){
-                $clase->devolverEntrada($soc);
+        $ventaSrv = new VentaService();
 
-            });
-        }
+        $socios->each(function($socio) use ($clase, $ventaSrv){
+            $venta = $socio->ventas->filter(function($venta) use ($clase) { return $venta->servicios->contains(function($servicio) use($clase){return $servicio->id == $clase->id_servicio;}); })
+                ->sortBy(function($venta){return $venta->id;})
+                ->first();
+
+            $ventaSrv->retornarCredito($venta, $clase);
+
+        });
     }
 
 }

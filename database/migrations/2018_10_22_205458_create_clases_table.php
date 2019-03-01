@@ -19,12 +19,9 @@ class CreateClasesTable extends Migration
         Schema::create('clases', function (Blueprint $table) {
             $table->increments('id');
             $table->date('fecha');
-            $table->string('dia');
             $table->smallInteger('estado');
             $table->integer('id_servicio')->unsigned()->nullable();
             $table->foreign('id_servicio')->references('id')->on('servicios');
-            $table->integer('id_dia')->unsigned()->nullable();
-            $table->foreign('id_dia')->references('id')->on('dias');
             $table->time('desde');
             $table->time('hasta');
             $table->time('entrada_desde')->nullable();

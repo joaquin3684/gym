@@ -79,30 +79,6 @@ class ServicioService
         return Servicio::with('horarios.profesores')->get();
     }
 
-    public function devolverEntradas($elem)
-    {
-        $servicios = $elem['servicios'];
-        foreach ($elem['socios'] as $socio) {
-            $soc = Socio::with(['servicios' => function ($q) use ($servicios) {
-                $q->whereIn('id_servicio', $servicios);
-            }])->find($socio);
-            $serv = $soc->servicios->first();
-            $serv->devolverEntrada($soc);
-        }
-    }
-
-    public function registrarEntradas($elem)
-    {
-        $servicios = $elem['servicios'];
-        foreach ($elem['socios'] as $socio) {
-            $soc = Socio::with(['servicios' => function ($q) use ($servicios) {
-                $q->whereIn('id_servicio', $servicios);
-            }])->find($socio);
-            $serv = $soc->servicios->first();
-            $serv->registrarEntrada($soc);
-        }
-    }
-
 
 
 }

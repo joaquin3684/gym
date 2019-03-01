@@ -52,7 +52,6 @@ Route::group(['middleware' => ['permisos', 'jwt.auth']], function() {
 
     //SOCIO
     Route::post('socio/acceder', 'SocioController@acceder');
-
     Route::post('socio/crear', 'SocioController@store');
     Route::get('socio/all', 'SocioController@all');
     Route::put('socio/editar/{id}', 'SocioController@update');
@@ -116,7 +115,7 @@ Route::group(['middleware' => ['permisos', 'jwt.auth']], function() {
     Route::post('clase/crear', 'ClaseController@create');
     Route::get('clase/delDia', 'ClaseController@clasesDelDia');
     Route::get('clase/enTranscurso', 'ClaseController@clasesEnTranscurso');
-    Route::get('clase/all', 'ClaseController@all');
+    Route::post('clase/all', 'ClaseController@all');
     Route::get('clase/futuras', 'ClaseController@clasesFuturas');
     Route::post('clase/registrarAlumnos', 'ClaseController@registrarAlumnos');
     Route::post('clase/sacarAlumnos', 'ClaseController@sacarAlumnos');

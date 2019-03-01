@@ -11,7 +11,7 @@ class Clase extends Model
 
     use SoftDeletes;
     protected $table = 'clases';
-    protected $fillable = ['fecha', 'dia', 'id_servicio', 'estado', 'desde', 'hasta', 'entrada_desde', 'entrada_hasta', 'id_dia'];
+    protected $fillable = ['fecha', 'id_servicio', 'estado', 'desde', 'hasta', 'entrada_desde', 'entrada_hasta'];
 
     public function alumnos()
     {

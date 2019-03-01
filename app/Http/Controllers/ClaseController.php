@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Clase;
 use App\services\ClaseService;
+use App\Servicio;
+use App\Socio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -17,16 +20,40 @@ class ClaseController extends Controller
     public function create(Request $request)
     {
         return  Db::transaction(function() use ($request){
-            return $this->service->crear($request->all());
+
+            $fecha = $request['fecha'];
+            $desde = $request['desde'];
+            $hasta = $request['hasta'];
+            $entradaDesde = $request['entradaDesde'];
+            $entradaHasta = $request['entradaHasta'];
+            $estado = $request['estado'];
+            $servicio = Servicio::find($request['idServicio']);
+            $profesores = $request['profesores'];
+
+
+            $clase = $this->service->crear($fecha, $servicio, $desde, $hasta, $entradaDesde, $entradaHasta, $estado, $profesores);
+            return $clase->id;
         });
     }
 
 
     public function update(Request $request, $id)
     {
-      return  Db::transaction(function() use ($request, $id){
-            $this->service->update($request->all(), $id);
-        });
+       Db::transaction(function() use ($request, $id){
+
+          $fecha = $request['fecha'];
+          $desde = $request['desde'];
+          $hasta = $request['hasta'];
+          $entradaDesde = $request['entradaDesde'];
+          $entradaHasta = $request['entradaHasta'];
+          $estado = $request['estado'];
+          $servicio = Servicio::find($request['idServicio']);
+          $profesores = $request['profesores'];
+          $clase = Clase::find($id);
+
+          $this->service->update($fecha, $servicio, $desde, $hasta, $entradaDesde, $entradaHasta, $estado, $profesores, $clase);
+
+      });
     }
 
     public function clasesDelDia()
@@ -44,9 +71,9 @@ class ClaseController extends Controller
         return $this->service->clasesFuturas();
     }
 
-    public function all()
+    public function all(Request $request)
     {
-        return $this->service->all();
+        return $this->service->all($request['fechaDesde'], $request['fechaHasta']);
     }
 
     public function registrarAlumnos(Request $request)
@@ -68,14 +95,18 @@ class ClaseController extends Controller
     public function registrarEntrada(Request $request)
     {
         DB::transaction(function ($request) {
-            $this->service->registrarEntradas($request->all());
+            $socios = Socio::whereIn('id', $request['socios'])->get();
+            $clase = Clase::find($request['idClase']);
+            $this->service->registrarEntradas($clase, $socios);
         });
     }
 
     public function devolverEntrada(Request $request)
     {
         DB::transaction(function($request){
-            $this->service->devolverEntradas($request->all());
+            $socios = Socio::whereIn('id', $request['socios'])->get();
+            $clase = Clase::find($request['idClase']);
+            $this->service->devolverEntradas($clase, $socios);
         });
 
     }
