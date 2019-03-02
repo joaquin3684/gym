@@ -23,7 +23,7 @@ class ClaseProfesor extends Migration
             $table->foreign('id_profesor')->references('id')->on('profesores');
             $table->boolean('pagada')->default(0);
             $table->string('tipo_pago')->default("1");
-            $table->double('precio');
+            $table->double('precio')->default(0);
             $table->timestamps();
         });
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
