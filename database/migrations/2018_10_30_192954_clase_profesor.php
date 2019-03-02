@@ -22,7 +22,7 @@ class ClaseProfesor extends Migration
             $table->integer('id_profesor')->unsigned();
             $table->foreign('id_profesor')->references('id')->on('profesores');
             $table->boolean('pagada')->default(0);
-            $table->string('tipo_pago');
+            $table->string('tipo_pago')->default("1");
             $table->double('precio');
             $table->timestamps();
         });
