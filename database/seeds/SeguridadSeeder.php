@@ -32,6 +32,7 @@ class SeguridadSeeder extends Seeder
         $pantalla6 = factory(App\Pantalla::class)->create(['nombre' => 'profesor']);
         $pantalla7 = factory(App\Pantalla::class)->create(['nombre' => 'producto']);
         $pantalla8 = factory(App\Pantalla::class)->create(['nombre' => 'cuotas']);
+        $pantalla9 = factory(App\Pantalla::class)->create(['nombre' => 'clase']);
 
 
         $user = factory(App\User::class)->create(['id_perfil' => 1, 'name' => 'prueba', 'password' => Hash::make('prueba')]);
@@ -46,6 +47,7 @@ class SeguridadSeeder extends Seeder
         $perfil->pantallas()->attach($pantalla6->id);
         $perfil->pantallas()->attach($pantalla7->id);
         $perfil->pantallas()->attach($pantalla8->id);
+        $perfil->pantallas()->attach($pantalla9->id);
 
         $pantalla->rutas()->attach($ruta->id);
         $pantalla->rutas()->attach($ruta2->id);
