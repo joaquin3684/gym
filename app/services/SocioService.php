@@ -55,6 +55,30 @@ class SocioService
     }
 
 
+    public function serviciosVigentes($idSocio)
+    {
+        $hoy = Carbon::today()->toDateString();
+        $dia = Carbon::today()->dayOfWeekIso;
+        $hora = Carbon::now('America/Argentina/Buenos_Aires')->toTimeString();
+        $horaPosterior = Carbon::now('America/Argentina/Buenos_Aires')->addHour(2)->toTimeString();
+
+        $socio = Socio::with(['ventas' => function($q) use ($hoy) {
+            $q->where('vto', '>=', $hoy)
+                ->with(['cuotas' => function ($q) use ($hoy) {
+                    $q->where('pagada', true)
+                        ->where('fecha_inicio', '<=', $hoy);
+                }])
+                ->with(['servicios' => function ($query) use ($hoy, $dia, $hora) {
+                    $query->where('vto', '>=', $hoy)
+                        ->where(function ($q) {
+                            $q->where('creditos', '>', 0)
+                                ->orWhere('creditos', null);
+                        })
+                        ->where('registra_entrada', true);
+                }]);
+        }])->find($idSocio);
+    }
+
     public function acceder($elem)
     {
         $hoy = Carbon::today()->toDateString();

@@ -76,20 +76,10 @@ class ClaseController extends Controller
         return $this->service->all($request['fechaDesde'], $request['fechaHasta']);
     }
 
-    public function registrarAlumnos(Request $request)
+
+    public function alumnosRegistrables($idClase)
     {
-        DB::transaction(function ($request){
-            $this->service->registrarAlumnos($request->all());
-
-        });
-    }
-
-    public function sacarAlumnos(Request $request)
-    {
-        DB::transaction(function ($request) {
-
-            $this->service->sacarAlumnos($request->all());
-        });
+        $socios = Socio::
     }
 
     public function registrarEntrada(Request $request)

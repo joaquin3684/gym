@@ -46,17 +46,6 @@ class ClaseService
         return $clase;
     }
 
-    public function registrarAlumnos($elem)
-    {
-        $clase = Clase::find($elem['id']);
-        $clase->alumnos()->attach($elem['alumnos']);
-    }
-
-    public function sacarAlumnos($elem)
-    {
-        $clase = Clase::find($elem['id']);
-        $clase->alumnos()->detach($elem['alumnos']);
-    }
 
     public function all($fechaDesde, $fechaHasta)
     {
@@ -74,12 +63,12 @@ class ClaseService
     public function clasesEnTranscurso()
     {
         $ahora = Carbon::now()->toTimeString();
-        return Clase::with('profesores', 'servicio', 'alumnos')->where('entrada_desde', '<=', $ahora)->where('hasta', '>=', $ahora)->where('fecha', Carbon::today()->toDateString());
+        return Clase::with('profesores', 'servicio', 'alumnos')->where('entrada_desde', '<=', $ahora)->where('hasta', '>=', $ahora)->where('fecha', Carbon::today()->toDateString())->get();
     }
 
     public function clasesFuturas()
     {
-        return Clase::with('profesores', 'servicio', 'alumnos')->where('fecha', '>', Carbon::today()->toDateString());
+        return Clase::with('profesores', 'servicio', 'alumnos')->where('fecha', '>', Carbon::today()->toDateString())->get();
     }
 
     public function registrarEntradas(Clase $clase, $socios)

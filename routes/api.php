@@ -113,8 +113,8 @@ Route::group(['middleware' => ['permisos', 'jwt.auth']], function() {
 
     Route::put('clase/editar/{id}', 'ClaseController@update');
     Route::post('clase/crear', 'ClaseController@create');
-    Route::get('clase/delDia', 'ClaseController@clasesDelDia');
     Route::get('clase/enTranscurso', 'ClaseController@clasesEnTranscurso');
+    Route::get('clase/delDia', 'ClaseController@clasesDelDia');
     Route::post('clase/all', 'ClaseController@all');
     Route::get('clase/futuras', 'ClaseController@clasesFuturas');
     Route::post('clase/registrarAlumnos', 'ClaseController@registrarAlumnos');
